@@ -1,0 +1,24 @@
+/* Change size of header and row font */
+th { font-size: 14px; }
+td { font-size: 14px; }
+
+/* Make border around table and align numbers*/
+table {
+    border:1px solid;
+    text-align: center;
+}
+
+/* Left Align for names */
+.table td:first-child {
+  text-align: left;
+}
+
+/* Helps make columns wider*/
+tr,th,td {
+overflow:hidden;
+white-space:nowrap;
+word-wrap:break-word;
+}
+
+
+

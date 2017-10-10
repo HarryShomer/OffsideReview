@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <h1 style="padding: 10px 70px 10px 70px;">About</h1>
+
+    <p style="padding: 10px 70px 10px 70px; font-size:135%;">
+        OffsideReview is a resource for National Hockey League (NHL) statistics. As of now, the data is from the
+        2016-2017 season until the present for all Regular Season and Playoff games (Preseason is not included). There are
+        currently three views: Skaters, Team, and Goalies. In each view you query data by a variety of different
+        parameters. The option also exists to download your query in the form of a CSV file. The site is updated
+        every morning at 5 a.m. EST.
+    </p>
+
+    <p style="padding: 10px 70px 10px 70px; font-size:135%;">
+        For those interested in the construction of the site, I use the
+        <a href="https://www.djangoproject.com/">Django Web Framework</a> (written in
+        <a href="https://www.python.org">Python</a>) for the site. The frontend is comprised of
+        <a href="http://getbootstrap.com/">Bootstrap</a> and <a href="https://jquery.com/">JQuery</a>.
+        All code can also be found <a href="">here</a>. The raw data used to create the statistics for this site is courtesy of the National Hockey League API and website.
+        More info on the exact sources of the data and how it's scraped can be found
+        <a href="https://github.com/HarryShomer/Hockey-Scraper">here</a>.
+    </p>
+
+
+    <p style="padding: 10px 70px 10px 70px; font-size:135%;">
+        If you wish to contact me to report a bug or suggest a new feature you can get in touch with me either on twitter
+        at <a href="">@offsides_review</a> or you can email me at OffsideReviewHockey@gmail.com.
+    </p>
+
+
+{% endblock %}

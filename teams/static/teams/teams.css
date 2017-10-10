@@ -1,0 +1,23 @@
+/* Change size of header and row font */
+th { font-size: 14px; }
+td { font-size: 14px; }
+
+/* Make border around table and align numbers*/
+table {
+    border:1px solid;
+    text-align: center;
+}
+
+/* Helps make columns wider*/
+tr,th,td {
+overflow:hidden;
+white-space:nowrap;
+word-wrap:break-word;
+}
+
+
+/* Datatables gets rid of color for frozen column (first column) -> just add it in */
+tr:nth-child(1) > th:nth-child(1){
+    background-color: #337ab7;
+}
+

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="jumbotron">
+      <h1 align="center">OffsideReview</h1>
+
+      <p class="lead" align="center">
+          Resource for hockey statistics
+      </p>
+
+    </div>
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-4">
+                <h2>Skaters</h2>
+                <p>Query stats by skater. Multiple views exists including: Individual stats, On-Ice stats,
+                    Relative stats, and Zone starts.
+                </p>
+                <p>
+                    <a class="btn btn-default " href="{% url 'skaters:index' %}" role="button">View Skater Data</a>
+                </p>
+            </div>
+
+            <div class="col-md-4">
+                <h2>Teams</h2>
+                <p>
+                    Query stats by team. Includes the ability to filter between a custom date range.
+                   <br><br>
+                </p>
+                <p>
+                    <a class="btn btn-default " href="{% url 'teams:index' %}" role="button">View Team Data</a>
+                </p>
+            </div>
+
+            <div class="col-md-4">
+                <h2>Goalies</h2>
+                <p>
+                    Query stats by goalie. Includes the ability to filter by game.
+                    <br><br>
+                </p>
+                <p>
+                    <a class="btn btn-default " href="{% url 'goalies:index' %}" role="button">View Goalie Data</a>
+                </p>
+            </div>
+        </div>
+
+        <hr>
+    </div>
+
+{% endblock %}
