@@ -4,7 +4,7 @@
 statistics from the 2016-2017 season onwards for all Regular Season and Playoff games.  
 
  
-##Features
+## Features
 
 There are currently three views for querying data: Skaters, Teams, and Goalies.
 
@@ -22,14 +22,14 @@ In each view you query data by a variety of different parameters, including:
 * Player (for skaters and goalies)
 
 
-##Built With
+## Built With
 
-###Server-Side
+### Server-Side
 * Python 3 - Language of choice.
 * Django - Web Framework Used.
 * Postgresql - Database used to store and retrieve data.
 
-###Client-Side and Design
+### Client-Side and Design
 * Bootstrap - Used for frontend styling.
 * JQuery - Event handling, Ajax calls, and standard Javascript code.
 * JQuery Plugins - [Datatables](https://github.com/DataTables/DataTables) was used to construct
@@ -37,7 +37,7 @@ the tables to hold the data and [select2](https://github.com/select2/select2) wa
 select boxes. 
 
 
-##Contact
+## Contact
 
 Please contact me for any issues, suggestions, or anything site related. For any bugs or
 anything related to the code please open an issue. Otherwise you can contact me at either:
