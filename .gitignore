@@ -1,5 +1,6 @@
-# Get rid of secret directory
+# Get rid of secret directory and migrations
 secret/
+migrations/
 
 
 # Byte-compiled / optimized / DLL files
@@ -27,6 +28,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+.idea/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
