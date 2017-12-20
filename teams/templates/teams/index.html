@@ -18,160 +18,161 @@
     <link rel="stylesheet" type="text/css" href="{% static 'teams/teams.css' %}" />
 
 
+    <div class="container-fluid" style="margin-left: 25px;">
+        <!-- FIRST ROW -->
+        <div class="row" style="padding-top: 1cm; padding-bottom: 1cm; text-align: center;">
 
-    <!-- FIRST ROW -->
-    <div class="row" style="margin-left: 25px; padding-top: 1cm; padding-bottom: 1cm; text-align: center;">
+            <!-- Strength Button -->
+            <div class="col-sm-2" >
+                 <label for="Strength">Strength</label>
 
-        <!-- Strength Button -->
-        <div class="col-lg-2" >
-             <label for="Strength">Strength</label>
+                 <select class="form-control" id="Strength">
+                    <option hidden></option>
+                    <option value="All Situations">All Situations</option>
+                    <option value="5x5">5v5</option>
+                    <option value="5x4">5v4</option>
+                    <option value="4x5">4v5</option>
+                    <option value="5x3">5v3</option>
+                    <option value="3x5">3v5</option>
+                    <option value="4x4">4v4</option>
+                    <option value="4x3">4v3</option>
+                    <option value="3x4">3v4</option>
+                    <option value="3x3">3v3</option>
+                    <option value="6x5">6v5</option>
+                    <option value="5x6">5v6</option>
+                    <option value="6x4">6v4</option>
+                    <option value="4x6">4v6</option>
+                 </select>
+            </div>
 
-             <select class="form-control" id="Strength">
-                <option hidden></option>
-                <option value="All Situations">All Situations</option>
-                <option value="5x5">5v5</option>
-                <option value="5x4">5v4</option>
-                <option value="4x5">4v5</option>
-                <option value="5x3">5v3</option>
-                <option value="3x5">3v5</option>
-                <option value="4x4">4v4</option>
-                <option value="4x3">4v3</option>
-                <option value="3x4">3v4</option>
-                <option value="3x3">3v3</option>
-                <option value="6x5">6v5</option>
-                <option value="5x6">5v6</option>
-                <option value="6x4">6v4</option>
-                <option value="4x6">4v6</option>
-             </select>
+            <!-- Season/Game/Cumulative Button -->
+            <div class="col-sm-2">
+
+                 <label for="Split_By">Split By</label>
+
+                 <select class="form-control" id="Split_By">
+                    <option hidden></option>
+                    <option value="Season">Season</option>
+                    <option value="Game">Game</option>
+                     <option value="Cumulative">Cumulative</option>
+                 </select>
+            </div>
+
+            <!-- Venue # Button -->
+            <div class="col-sm-2">
+                 <label for="Venue">Venue</label>
+
+                 <select class="form-control" id="Venue">
+                    <option hidden></option>
+                    <option value="Both">Both</option>
+                    <option value="Home">Home</option>
+                    <option value="Away">Away</option>
+
+                 </select>
+            </div>
+
+            <!-- Playoffs/Regular Season/Both button-->
+            <div class="col-sm-2">
+
+                <label for="season_type" >Season Type</label>
+                <select class="form-control" id="season_type">
+                    <option hidden></option>
+                    <option value="Regular Season">Regular Season</option>
+                    <option value="Playoffs">Playoffs</option>
+                    <option value="All">All</option>
+                 </select>
+
+            </div>
+
+            <!-- Score/Non-Score Adjusted Button -->
+            <div class="col-sm-2">
+                 <label for="adjustmentButton">Adjustments</label>
+
+                 <select class="form-control" id="adjustmentButton">
+                    <option hidden></option>
+                    <option value="Non Score Adjusted">Non Score Adjusted</option>
+                    <option value="Score Adjusted">Score Adjusted</option>
+                 </select>
+            </div>
+
         </div>
 
-        <!-- Season/Game/Cumulative Button -->
-        <div class="col-lg-2">
 
-             <label for="Split_By">Split By</label>
 
-             <select class="form-control" id="Split_By">
-                <option hidden></option>
-                <option value="Season">Season</option>
-                <option value="Game">Game</option>
-                 <option value="Cumulative">Cumulative</option>
-             </select>
-        </div>
+        <!-- SECOND ROW -->
+        <div class="row" style="padding-bottom: 1cm; text-align: center;">
 
-        <!-- Venue # Button -->
-        <div class="col-lg-2">
-             <label for="Venue">Venue</label>
+                <!-- Custom Date filter button-->
+            <div class="col-sm-2">
 
-             <select class="form-control" id="Venue">
-                <option hidden></option>
-                <option value="Both">Both</option>
-                <option value="Home">Home</option>
-                <option value="Away">Away</option>
+                <label for="date_filter_1" >From</label>
+                <input class="form-control" id="date_filter_1" type="date" value=2017-10-01>
+                <label for="date_filter_2" >To</label>
+                <input class="form-control" id="date_filter_2" type="date" value=2018-07-01>
 
-             </select>
-        </div>
+            </div>
 
-        <!-- Playoffs/Regular Season/Both button-->
-        <div class="col-xs-2">
 
-            <label for="season_type" >Season Type</label>
-            <select class="form-control" id="season_type">
-                <option hidden></option>
-                <option value="Regular Season">Regular Season</option>
-                <option value="Playoffs">Playoffs</option>
-                <option value="All">All</option>
-             </select>
+             <!-- Team Button -->
+            <div class="col-sm-2" >
+                <label for="TeamButton">Team</label>
 
-        </div>
+                 <select class="form-control" id="TeamButton">
+                    <option value="">All</option>
+                    <option value="ANA">ANA</option>
+                    <option value="ARI">ARI</option>
+                    <option value="ATL">ATL</option>
+                    <option value="BOS">BOS</option>
+                    <option value="BUF">BUF</option>
+                    <option value="CAR">CAR</option>
+                    <option value="CBJ">CBJ</option>
+                    <option value="CGY">CGY</option>
+                    <option value="CHI">CHI</option>
+                    <option value="COL">COL</option>
+                    <option value="DAL">DAL</option>
+                    <option value="DET">DET</option>
+                    <option value="EDM">EDM</option>
+                    <option value="FLA">FLA</option>
+                    <option value="L.A">L.A</option>
+                    <option value="MIN">MIN</option>
+                    <option value="MTL">MTL</option>
+                    <option value="N.J">N.J</option>
+                    <option value="NSH">NSH</option>
+                    <option value="NYI">NYI</option>
+                    <option value="NYR">NYR</option>
+                    <option value="OTT">OTT</option>
+                    <option value="PHI">PHI</option>
+                    <option value="PHX">PHX</option>
+                    <option value="PIT">PIT</option>
+                    <option value="S.J">S.J</option>
+                    <option value="STL">STL</option>
+                    <option value="TOR">TOR</option>
+                    <option value="VAN">VAN</option>
+                    <option value="VGK">VGK</option>
+                    <option value="WPG">WPG</option>
+                    <option value="WSH">WSH</option>
+                 </select>
+            </div>
 
-        <!-- Score/Non-Score Adjusted Button -->
-        <div class="col-lg-2">
-             <label for="adjustmentButton">Adjustments</label>
 
-             <select class="form-control" id="adjustmentButton">
-                <option hidden></option>
-                <option value="Non Score Adjusted">Non Score Adjusted</option>
-                <option value="Score Adjusted">Score Adjusted</option>
-             </select>
+            <!-- TOI filter button-->
+            <div class="col-sm-2" >
+
+                <label for="toi_filter" >TOI</label>
+                <input class="form-control" id="toi_filter" type="number">
+
+            </div>
+
+
+            <!-- Load Button-->
+            <div class = "col-sm-1" style="left:40px; top:24px;">
+                <button type="button" id="loadButton" class="btn btn-primary btn-md btn-block">Load</button>
+            </div>
+
+
         </div>
 
     </div>
-
-
-
-    <!-- SECOND ROW -->
-    <div class="row" style="margin-left: 25px; padding-bottom: 1cm; text-align: center;">
-
-            <!-- Custom Date filter button-->
-        <div class="col-xs-2">
-
-            <label for="date_filter_1" >From</label>
-            <input class="form-control" id="date_filter_1" type="date" value=2016-10-01>
-            <label for="date_filter_2" >to</label>
-            <input class="form-control" id="date_filter_2" type="date" value=2017-07-01>
-
-        </div>
-
-
-         <!-- Team Button -->
-        <div class="col-xs-2" >
-            <label for="TeamButton">Team</label>
-
-             <select class="form-control" id="TeamButton">
-                <option value="">All</option>
-                <option value="ANA">ANA</option>
-                <option value="ARI">ARI</option>
-                <option value="ATL">ATL</option>
-                <option value="BOS">BOS</option>
-                <option value="BUF">BUF</option>
-                <option value="CAR">CAR</option>
-                <option value="CBJ">CBJ</option>
-                <option value="CGY">CGY</option>
-                <option value="CHI">CHI</option>
-                <option value="COL">COL</option>
-                <option value="DAL">DAL</option>
-                <option value="DET">DET</option>
-                <option value="EDM">EDM</option>
-                <option value="FLA">FLA</option>
-                <option value="L.A">L.A</option>
-                <option value="MIN">MIN</option>
-                <option value="MTL">MTL</option>
-                <option value="N.J">N.J</option>
-                <option value="NSH">NSH</option>
-                <option value="NYI">NYI</option>
-                <option value="NYR">NYR</option>
-                <option value="OTT">OTT</option>
-                <option value="PHI">PHI</option>
-                <option value="PHX">PHX</option>
-                <option value="PIT">PIT</option>
-                <option value="S.J">S.J</option>
-                <option value="STL">STL</option>
-                <option value="T.B">TOR</option>
-                <option value="VAN">VAN</option>
-                <option value="VGK">VGK</option>
-                <option value="WPG">WPG</option>
-                <option value="WSH">WSH</option>
-             </select>
-        </div>
-
-
-        <!-- TOI filter button-->
-        <div class="col-xs-2" >
-
-            <label for="toi_filter" >TOI</label>
-            <input class="form-control" id="toi_filter" type="number">
-
-        </div>
-
-
-        <!-- Load Button-->
-        <div class = "col-xs-1" style="left:40px; top:24px;">
-            <button type="button" id="loadButton" class="btn btn-primary btn-md btn-block">Load</button>
-        </div>
-
-
-    </div>
-
 
 
     <div class="container-fluid" id="stats_table" style="margin-left: 25px; margin-right: 25px;">

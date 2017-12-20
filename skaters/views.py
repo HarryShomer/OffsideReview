@@ -49,12 +49,12 @@ def query_data(request):
 
     query = filter_view(stats_view)
     query = query.filter(date__range=[date_filter_from, date_filter_to])
-    query = filter_season_type(query, season_type)
-    query = filter_strength(query, strength)
-    query = filter_venue(query, venue)
-    query = filter_team(query, team)
-    query = filter_position(query, position)
     query = filter_player(query, player_search)
+    query = filter_team(query, team)
+    query = filter_strength(query, strength)
+    query = filter_season_type(query, season_type)
+    query = filter_venue(query, venue)
+    query = filter_position(query, position)
 
     if stats_view == 'Individual':
         players = filter_by_individual(query, toi, split_by)
@@ -223,7 +223,7 @@ def filter_by_individual(data, toi, split_by):
     elif split_by == 'Cumulative':
         cols = ['player', 'player_id', 'team', 'position', 'handedness']
     else:
-        cols = ['player', 'player_id', 'season', 'game_id', 'team', 'date', 'opponent', 'position', 'handedness']
+        cols = ['player', 'player_id', 'season', 'game_id', 'team', 'date', 'opponent', 'home', 'position', 'handedness']
 
     data = data.values(*cols) \
         .annotate(games=Count('game_id', distinct=True), toi_on=Sum('toi_on'), goals=Sum('goals'), a1=Sum('a1'),
@@ -258,7 +258,7 @@ def filter_by_on_ice(data, toi, adjustment, split_by):
     elif split_by == 'Cumulative':
         cols = ['player', 'player_id', 'team', 'position', 'handedness']
     else:
-        cols = ['player', 'player_id', 'season', 'game_id', 'team', 'date', 'opponent', 'position', 'handedness']
+        cols = ['player', 'player_id', 'season', 'game_id', 'team', 'date', 'opponent', 'home', 'position', 'handedness']
 
     if adjustment == 'Score Adjusted':
         data = data.values(*cols) \
@@ -302,7 +302,7 @@ def filter_by_rel(data, toi, adjustment, split_by):
     elif split_by == 'Cumulative':
         cols = ['player', 'player_id', 'team', 'position', 'handedness']
     else:
-        cols = ['player', 'player_id', 'season', 'game_id', 'team', 'date', 'opponent', 'position', 'handedness']
+        cols = ['player', 'player_id', 'season', 'game_id', 'team', 'date', 'opponent', 'home', 'position', 'handedness']
 
     if adjustment == 'Score Adjusted':
         data = data.values(*cols) \
@@ -357,7 +357,7 @@ def filter_by_zone(data, toi, split_by):
     elif split_by == 'Cumulative':
         cols = ['player', 'player_id', 'team', 'position', 'handedness']
     else:
-        cols = ['player', 'player_id', 'season', 'game_id', 'team', 'date', 'opponent', 'position', 'handedness']
+        cols = ['player', 'player_id', 'season', 'game_id', 'team', 'date', 'opponent', 'home', 'position', 'handedness']
 
     data = data.values(*cols) \
         .annotate(games=Count('game_id', distinct=True), toi_on=Sum('toi_on'), face_off=Sum('face_off'),
@@ -624,3 +624,5 @@ def convert_to_seconds(minutes):
     :return: seconds
     """
     return int(minutes) * 60
+
+

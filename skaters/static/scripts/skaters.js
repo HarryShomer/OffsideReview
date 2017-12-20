@@ -91,6 +91,7 @@ $.noConflict();
                                    { extend: 'csvHtml5', text: 'Export Data' }
                                 ],
                                 "scrollX": true,
+                                fixedColumns: true
                           });
 
                     }
@@ -108,6 +109,7 @@ $.noConflict();
                 { "title": "Game.ID" , data: 'game_id'},
                 { "title": "Date" , data: 'date'},
                 { "title": "Opponent" , data: 'opponent'},
+                { "title": "Venue" , data: 'home'},
                 { "title": "Strength" , data: 'strength'},
                 { "title": "TOI" , data: 'toi_on'},
                 { "title": "GF" , data: 'goals_f'},
@@ -147,6 +149,7 @@ $.noConflict();
                 { "title": "Game.ID" , data: 'game_id'},
                 { "title": "Date" , data: 'date'},
                 { "title": "Opponent" , data: 'opponent'},
+                { "title": "Venue" , data: 'home'},
                 { "title": "Strength" , data: 'strength'},
                 { "title": "TOI" , data: 'toi_on'},
                 { "title": "Goals" , data: 'goals'},
@@ -166,7 +169,7 @@ $.noConflict();
                 { "title": "A260" , data: 'a260'},
                 { "title": "P60" , data: 'p60'},
                 { "title": "P160" , data: 'p160'},
-                { "title": "iSF0" , data: 'isf60'},
+                { "title": "iSF60" , data: 'isf60'},
                 { "title": "iFen60" , data: 'ifen60'},
                 { "title": "iCorsi60" , data: 'icors60'},
                 { "title": "HF" , data: 'hits_f'},
@@ -192,6 +195,7 @@ $.noConflict();
                 { "title": "Game.ID" , data: 'game_id'},
                 { "title": "Date" , data: 'date'},
                 { "title": "Opponent" , data: 'opponent'},
+                { "title": "Venue" , data: 'home'},
                 { "title": "Strength" , data: 'strength'},
                 { "title": "TOI" , data: 'toi_on'},
                 { "title": "REL GF%" , data: 'GF%_rel'},
@@ -222,6 +226,7 @@ $.noConflict();
                 { "title": "Game.ID" , data: 'game_id'},
                 { "title": "Date" , data: 'date'},
                 { "title": "Opponent" , data: 'opponent'},
+                { "title": "Venue" , data: 'home'},
                 { "title": "Strength" , data: 'strength'},
                 { "title": "TOI" , data: 'toi_on'},
                 { "title": "Neu. Faceoffs" , data: 'face_neu'},
@@ -242,13 +247,14 @@ $.noConflict();
                 data:[],
                 columns: table_columns_on_ice,
                 info: false,
+                "deferRender": true,
                 "searching":   false,
                 "pageLength": 50,
                 buttons: [
                    { extend: 'csvHtml5', text: 'Export Data' }
                 ],
                 "scrollX": true,
-
+                fixedColumns: true
             } );
 
 
@@ -272,7 +278,8 @@ $.noConflict();
                     for(var i = 0; i < full_table.length; i++) {
                         var column = full_table[i];
 
-                        if(column.title != "Game.ID" && column.title != "Date"  && column.title != "Opponent"){
+                        if(column.title != "Game.ID" && column.title != "Date"  && column.title != "Opponent"
+                           && column.title!="Venue"){
                             tmp_table.push(column);
                         }
                     }
@@ -280,8 +287,9 @@ $.noConflict();
                     for(var i = 0; i < full_table.length; i++) {
                         var column = full_table[i];
 
-                        if(column.title!="Game.ID" && column.title!="Date" && column.title!="Opponent" && column.title!="Season"){
-                            tmp_table.push(column);
+                        if(column.title!="Game.ID" && column.title!="Date" && column.title!="Opponent"
+                               && column.title!="Season" && column.title!="Venue"){
+                                tmp_table.push(column);
                         }
                     }
                 }else{

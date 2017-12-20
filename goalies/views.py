@@ -46,11 +46,11 @@ def query_data(request):
     toi = request.GET.get('toi')
 
     query = Goalies.objects.filter(date__range=[date_filter_from, date_filter_to])
-    query = filter_season_type(query, season_type)
-    query = filter_strength(query, strength)
-    query = filter_venue(query, venue)
-    query = filter_team(query, team)
     query = filter_player(query, player_search)
+    query = filter_team(query, team)
+    query = filter_strength(query, strength)
+    query = filter_season_type(query, season_type)
+    query = filter_venue(query, venue)
 
     # Season or Game
     if split_by == 'Season':
@@ -224,18 +224,19 @@ def filter_by_game(data, toi, adjustment):
     :param adjustment: ex: "Score Adjusted"
     :return: list (of dicts) who match criteria 
     """
-    cols = ['player', 'game_id', 'team', 'season', 'date', 'opponent', 'shots_a', 'goals_a', 'fenwick_a', 'corsi_a', 'toi_on']
+    cols = ['player', 'game_id', 'team', 'season', 'date', 'opponent', 'home', 'shots_a', 'goals_a', 'fenwick_a',
+            'corsi_a', 'toi_on']
 
     if adjustment == 'Score Adjusted':
         # These columns are to hold non adjusted numbers for percentages when using score adjusted numbers
         cols = cols + ['shots_a_raw', 'fenwick_a_raw']
 
-        data = data.values('player', 'player_id', 'season', 'game_id', 'team', 'date', 'opponent') \
+        data = data.values('player', 'player_id', 'season', 'game_id', 'team', 'date', 'opponent', 'home') \
             .annotate(goals_a=Sum('goals_a'), shots_a_raw=Sum('shots_a'), fenwick_a_raw=Sum('fenwick_a'),
                       shots_a=Sum('shots_a_sa'), fenwick_a=Sum('fenwick_a_sa'), corsi_a=Sum('corsi_a_sa'),
                       toi_on=Sum('toi_on'))
     else:
-        data = data.values('player', 'player_id', 'season', 'game_id',  'team', 'date', 'opponent') \
+        data = data.values('player', 'player_id', 'season', 'game_id',  'team', 'date', 'opponent', 'home') \
             .annotate(goals_a=Sum('goals_a'), shots_a=Sum('shots_a'), fenwick_a=Sum('fenwick_a'),
                       corsi_a=Sum('corsi_a'), toi_on=Sum('toi_on'))
 

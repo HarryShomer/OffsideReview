@@ -90,7 +90,7 @@ $.noConflict();
                                    { extend: 'csvHtml5', text: 'Export Data' }
                                 ],
                                 "scrollX": true,
-
+                                fixedColumns: true
                           });
                     }
 
@@ -107,6 +107,7 @@ $.noConflict();
                         { "title": "Date" , data: 'date'},
                         { "title": "Team" , data: 'team'},
                         { "title": "Opponent" , data: 'opponent'},
+                        { "title": "Venue" , data: 'home'},
                         { "title": "Strength" , data: 'strength'},
                         { "title": "TOI" , data: 'toi_on'},
                         { "title": "GA" , data: 'goals_a'},
@@ -128,13 +129,14 @@ $.noConflict();
                 data:[],
                 columns: table_columns,
                 info: false,
+                "deferRender": true,
                 "searching":   false,
                 "pageLength": 50,
                 buttons: [
                     { extend: 'csvHtml5', text: 'Export Data' }
                 ],
-
-                "scrollX": true
+                "scrollX": true,
+                fixedColumns: true
             } );
 
 
@@ -145,26 +147,28 @@ $.noConflict();
                     for(var i = 0; i < table_columns.length; i++) {
                         var column = table_columns[i];
 
-                        if(column.title != "Game.ID" && column.title != "Date"  && column.title != "Opponent"){
+                        if(column.title != "Game.ID" && column.title != "Date"  && column.title != "Opponent"
+                           && column.title!="Venue"){
                             tmp_table.push(column);
                         }
                     }
                 }else if(table_type == "Cumulative"){
-                    for(var i = 0; i < table_columns.length; i++) {
-                        var column = table_columns[i];
+                        for(var i = 0; i < table_columns.length; i++) {
+                            var column = table_columns[i];
 
-                        if(column.title!="Game.ID" && column.title!="Date" && column.title!="Opponent" && column.title!="Season"){
-                            tmp_table.push(column);
+                            if(column.title!="Game.ID" && column.title!="Date" && column.title!="Opponent"
+                               && column.title!="Season" && column.title!="Venue"){
+                                tmp_table.push(column);
+                            }
                         }
-                    }
                 }else if(table_type == "Game"){
-                    for(var i = 0; i < table_columns.length; i++) {
-                        var column = table_columns[i];
+                        for(var i = 0; i < table_columns.length; i++) {
+                            var column = table_columns[i];
 
-                        if(column.title!="GP"){
-                            tmp_table.push(column);
+                            if(column.title!="GP"){
+                                tmp_table.push(column);
+                            }
                         }
-                    }
                 }
                 return tmp_table
             }

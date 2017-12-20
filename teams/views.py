@@ -216,15 +216,15 @@ def filter_by_game(data, toi, adjustment):
     :return: list (of dicts) who match criteria 
     'game_id', 'date', 'opponent'
     """
-    cols = ['team', 'season', 'game_id', 'date', 'opponent', 'goals_a', 'goals_f', 'shots_a', 'shots_f', 'fenwick_a',
-            'fenwick_f', 'corsi_a', 'corsi_f', 'pent', 'pend', 'hits_f', 'hits_a', 'gives', 'takes', 'face_l', 'face_w',
-            'face_off', 'face_def', 'face_neu', 'toi']
+    cols = ['team', 'season', 'game_id', 'date', 'opponent', 'home', 'goals_a', 'goals_f', 'shots_a', 'shots_f',
+            'fenwick_a', 'fenwick_f', 'corsi_a', 'corsi_f', 'pent', 'pend', 'hits_f', 'hits_a', 'gives', 'takes',
+            'face_l', 'face_w', 'face_off', 'face_def', 'face_neu', 'toi']
 
     if adjustment == 'Score Adjusted':
         # These columns are to hold non adjusted numbers for percentages when using score adjusted numbers
         cols = cols + ['shots_f_raw', 'shots_a_raw', 'fenwick_f_raw', 'fenwick_a_raw']
 
-        data = data.values('team', 'season', 'game_id', 'date', 'opponent') \
+        data = data.values('team', 'season', 'game_id', 'date', 'opponent', 'home') \
             .annotate(goals_a=Sum('goals_a'), shots_a_raw=Sum('shots_a'), fenwick_a_raw=Sum('fenwick_a'),
                       shots_f_raw=Sum('shots_f'), fenwick_f_raw=Sum('fenwick_f'), shots_a=Sum('shots_a_sa'),
                       fenwick_a=Sum('fenwick_a_sa'), corsi_a=Sum('corsi_a_sa'), goals_f=Sum('goals_f'), toi=Sum('toi'),
@@ -233,7 +233,7 @@ def filter_by_game(data, toi, adjustment):
                       hits_a=Sum('hits_a'), face_l=Sum('face_l'), face_w=Sum('face_w'), face_off=Sum('face_off'),
                       face_def=Sum('face_def'), face_neu=Sum('face_neu'))
     else:
-        data = data.values('team', 'season', 'game_id', 'date', 'opponent') \
+        data = data.values('team', 'season', 'game_id', 'date', 'opponent', 'home') \
             .annotate(goals_a=Sum('goals_a'), shots_a=Sum('shots_a'), fenwick_a=Sum('fenwick_a'), corsi_a=Sum('corsi_a'),
                       goals_f=Sum('goals_f'), toi=Sum('toi'), shots_f=Sum('shots_f'), fenwick_f=Sum('fenwick_f'),
                       corsi_f=Sum('corsi_f'), pent=Sum('pent'), pend=Sum('pend'), gives=Sum('gives'), takes=Sum('takes'),

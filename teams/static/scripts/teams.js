@@ -63,6 +63,7 @@ $.noConflict();
                         { "title": "Game.ID" , data: 'game_id'},
                         { "title": "Date" , data: 'date'},
                         { "title": "Opponent" , data: 'opponent'},
+                        { "title": "Venue" , data: 'home'},
                         { "title": "Strength" , data: 'strength'},
                         { "title": "TOI" , data: 'toi'},
                         { "title": "GF" , data: 'goals_f'},
@@ -108,12 +109,14 @@ $.noConflict();
                 data:[],
                 columns: table_columns,
                 info: false,
+                "deferRender": true,
                 "searching":   false,
                 "pageLength": 50,
                 buttons: [
                    { extend: 'csvHtml5', text: 'Export Data' }
                 ],
-                "scrollX": true
+                "scrollX": true,
+                fixedColumns: true
             } );
 
 
@@ -124,7 +127,8 @@ $.noConflict();
                     for(var i = 0; i < table_columns.length; i++) {
                         var column = table_columns[i];
 
-                        if(column.title != "Game.ID" && column.title != "Date"  && column.title != "Opponent"){
+                        if(column.title != "Game.ID" && column.title != "Date"  && column.title != "Opponent"
+                           && column.title!="Venue"){
                             tmp_table.push(column);
                         }
                     }
@@ -132,8 +136,9 @@ $.noConflict();
                     for(var i = 0; i < table_columns.length; i++) {
                         var column = table_columns[i];
 
-                        if(column.title!="Game.ID" && column.title!="Date" && column.title!="Opponent" && column.title!="Season"){
-                            tmp_table.push(column);
+                        if(column.title!="Game.ID" && column.title!="Date" && column.title!="Opponent"
+                               && column.title!="Season" && column.title!="Venue"){
+                                tmp_table.push(column);
                         }
                     }
                 }else{
