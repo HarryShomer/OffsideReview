@@ -3,7 +3,6 @@ from django.http import JsonResponse
 from django.db.models import Sum, Count
 from django.db.models import F
 from .models import Skaters
-from django.core import serializers
 
 
 class IndexView(generic.ListView):
@@ -69,8 +68,7 @@ def query_data(request):
         players = filter_by_zone(query, toi, split_by)
         players = [calculate_zone_stats(player, strength) for player in players]
 
-    response = {'data': players}
-    return JsonResponse(response)
+    return JsonResponse({'data': players})
 
 
 def filter_view(stats_view):
@@ -81,22 +79,24 @@ def filter_view(stats_view):
     """
     if stats_view == 'Individual':
         return Skaters.objects.values('player', 'player_id', 'position', 'handedness', 'team', 'game_id', 'season', 'date',
-                                      'opponent', 'home', 'strength', 'toi_on', 'goals', 'a1', 'a2', 'isf', 'ifen',
+                                      'opponent', 'home', 'strength', 'toi_on', 'goals', 'a1', 'a2', 'isf', 'ifen', 'ixg',
                                       'icors', 'iblocks', 'pen_drawn', 'pen_taken', 'gives', 'takes', 'hits_f', 'hits_a',
                                       'ifac_win', 'ifac_loss', 'if_empty')
     elif stats_view == 'On Ice':
         return Skaters.objects.values('player', 'player', 'position', 'handedness', 'team', 'game_id', 'season', 'date',
                                       'opponent', 'home', 'strength', 'toi_on', 'goals_a', 'goals_f', 'shots_f_sa',
                                       'fenwick_f_sa', 'corsi_f_sa', 'shots_a_sa', 'fenwick_a_sa', 'corsi_a_sa',
-                                      'shots_f', 'fenwick_f', 'corsi_f', 'shots_a', 'fenwick_a', 'corsi_a', 'if_empty')
+                                      'shots_f', 'fenwick_f', 'xg_f', 'corsi_f', 'shots_a', 'fenwick_a', 'corsi_a',
+                                      'xg_a', 'if_empty')
     elif stats_view == 'Relative':
         return Skaters.objects.values('player', 'player', 'position', 'handedness', 'team', 'game_id', 'season', 'date',
                                       'opponent', 'home', 'strength', 'toi_on', 'goals_a', 'goals_f', 'shots_f_sa',
                                       'fenwick_f_sa', 'corsi_f_sa', 'shots_a_sa', 'fenwick_a_sa', 'corsi_a_sa',
                                       'shots_f', 'fenwick_f', 'corsi_f', 'shots_a', 'fenwick_a', 'corsi_a', 'shots_f_off',
                                       'goals_f_off', 'fenwick_f_off', 'corsi_f_off', 'shots_a_off', 'goals_a_off',
-                                      'fenwick_a_off', 'corsi_a_off', 'shots_f_off_sa', 'fenwick_f_off_sa', 'corsi_f_off_sa',
-                                      'shots_a_off_sa', 'fenwick_a_off_sa', 'corsi_a_off_sa', 'toi_off', 'if_empty')
+                                      'fenwick_a_off', 'corsi_a_off', 'xg_f', 'xg_a', 'xg_f_off', 'xg_a_off',
+                                      'shots_f_off_sa', 'fenwick_f_off_sa', 'corsi_f_off_sa', 'shots_a_off_sa',
+                                      'fenwick_a_off_sa', 'corsi_a_off_sa', 'toi_off', 'if_empty')
     else:
         return Skaters.objects.values('player', 'player', 'position', 'handedness', 'team', 'game_id', 'season', 'date',
                                       'opponent', 'home', 'strength', 'toi_on', 'toi_off', 'face_off', 'face_def',
@@ -114,7 +114,7 @@ def filter_strength(data, strength):
     if strength != 'All Situations':
         # If it's has a 6 they obviously want empty net stuff otherwise don't bother
         if '6' in strength:
-            return data.filter(strength=strength)
+            return data.filter(strength=strength).filter(if_empty=1)
         else:
             return data.filter(strength=strength).filter(if_empty=0)
     else:
@@ -218,23 +218,18 @@ def filter_by_individual(data, toi, split_by):
     :param split_by: game, season, or cumulative
     :return: list (of dicts) who match criteria
     """
-    if split_by == 'Season':
-        cols = ['player', 'player_id', 'season', 'team', 'position', 'handedness']
-    elif split_by == 'Cumulative':
-        cols = ['player', 'player_id', 'team', 'position', 'handedness']
-    else:
-        cols = ['player', 'player_id', 'season', 'game_id', 'team', 'date', 'opponent', 'home', 'position', 'handedness']
+    cols = get_split_type(split_by)
 
     data = data.values(*cols) \
         .annotate(games=Count('game_id', distinct=True), toi_on=Sum('toi_on'), goals=Sum('goals'), a1=Sum('a1'),
-                  a2=Sum('a2'), isf=Sum('isf'), ifen=Sum('ifen'), icors=Sum('icors'), iblocks=Sum('iblocks'),
+                  a2=Sum('a2'), isf=Sum('isf'), ifen=Sum('ifen'), icors=Sum('icors'), ixg=Sum('ixg'), iblocks=Sum('iblocks'),
                   pend=Sum('pen_drawn'), pent=Sum('pen_taken'), gives=Sum('gives'), takes=Sum('takes'),
                   hits_f=Sum('hits_f'), hits_a=Sum('hits_a'), ifac_win=Sum('ifac_win'), ifac_loss=Sum('ifac_loss'))
 
     # Filter TOI
     data = filter_toi(data, toi)
 
-    cols = cols + ['toi_on', 'goals', 'a1', 'a2', 'isf', 'ifen', 'icors', 'iblocks', 'pend', 'pent', 'gives',
+    cols = cols + ['toi_on', 'goals', 'a1', 'a2', 'isf', 'ifen', 'ixg', 'icors', 'iblocks', 'pend', 'pent', 'gives',
                    'takes', 'hits_f', 'hits_a', 'ifac_win', 'ifac_loss']
 
     if split_by != 'Game':
@@ -253,33 +248,30 @@ def filter_by_on_ice(data, toi, adjustment, split_by):
     :param split_by: game, season, or cumulative
     :return: list (of dicts) who match criteria
     """
-    if split_by == 'Season':
-        cols = ['player', 'player_id', 'season', 'team', 'position', 'handedness']
-    elif split_by == 'Cumulative':
-        cols = ['player', 'player_id', 'team', 'position', 'handedness']
-    else:
-        cols = ['player', 'player_id', 'season', 'game_id', 'team', 'date', 'opponent', 'home', 'position', 'handedness']
+    cols = get_split_type(split_by)
 
     if adjustment == 'Score Adjusted':
         data = data.values(*cols) \
             .annotate(games=Count('game_id', distinct=True), toi_on=Sum('toi_on'), goals_a=Sum('goals_a'),
                       shots_a_raw=Sum('shots_a'), fenwick_a_raw=Sum('fenwick_a'), shots_f_raw=Sum('shots_f'),
                       fenwick_f_raw=Sum('fenwick_f'), shots_a=Sum('shots_a_sa'), fenwick_a=Sum('fenwick_a_sa'),
-                      corsi_a=Sum('corsi_a_sa'), goals_f=Sum('goals_f'), shots_f=Sum('shots_f_sa'),
-                      fenwick_f=Sum('fenwick_f_sa'), corsi_f=Sum('corsi_f_sa'))
+                      corsi_a=Sum('corsi_a_sa'), goals_f=Sum('goals_f'), shots_f=Sum('shots_f_sa'), xg_a=Sum('xg_a'),
+                      fenwick_f=Sum('fenwick_f_sa'), corsi_f=Sum('corsi_f_sa'), xg_f=Sum('xg_f'))
 
         # These columns are to hold non adjusted numbers for percentages when using score adjusted numbers
         cols = cols + ['shots_f_raw', 'shots_a_raw', 'fenwick_f_raw', 'fenwick_a_raw']
     else:
         data = data.values(*cols) \
             .annotate(games=Count('game_id', distinct=True), toi_on=Sum('toi_on'), goals_a=Sum('goals_a'),
-                      shots_a=Sum('shots_a'), fenwick_a=Sum('fenwick_a'), corsi_a=Sum('corsi_a'), goals_f=Sum('goals_f')
-                      , shots_f=Sum('shots_f'), fenwick_f=Sum('fenwick_f'), corsi_f=Sum('corsi_f'))
+                      shots_a=Sum('shots_a'), fenwick_a=Sum('fenwick_a'), corsi_a=Sum('corsi_a'),  xg_a=Sum('xg_a'),
+                      goals_f=Sum('goals_f'), shots_f=Sum('shots_f'), fenwick_f=Sum('fenwick_f'), corsi_f=Sum('corsi_f')
+                      , xg_f=Sum('xg_f'))
 
     # Filter TOI
     data = filter_toi(data, toi)
 
-    cols = cols + ['toi_on', 'goals_a', 'goals_f', 'shots_f', 'fenwick_f', 'corsi_f', 'shots_a', 'fenwick_a', 'corsi_a']
+    cols = cols + ['toi_on', 'goals_a', 'goals_f', 'shots_f', 'fenwick_f', 'xg_f', 'corsi_f', 'shots_a', 'fenwick_a',
+                   'xg_a', 'corsi_a']
     if split_by != 'Game':
         cols = cols + ['games']
 
@@ -296,13 +288,7 @@ def filter_by_rel(data, toi, adjustment, split_by):
     :param split_by: game, season, or cumulative
     :return: list (of dicts) who match criteria
     """
-
-    if split_by == 'Season':
-        cols = ['player', 'player_id', 'season', 'team', 'position', 'handedness']
-    elif split_by == 'Cumulative':
-        cols = ['player', 'player_id', 'team', 'position', 'handedness']
-    else:
-        cols = ['player', 'player_id', 'season', 'game_id', 'team', 'date', 'opponent', 'home', 'position', 'handedness']
+    cols = get_split_type(split_by)
 
     if adjustment == 'Score Adjusted':
         data = data.values(*cols) \
@@ -315,7 +301,8 @@ def filter_by_rel(data, toi, adjustment, split_by):
                       corsi_f=Sum('corsi_f_sa'), goals_a_off=Sum('goals_a_off'), shots_a_off=Sum('shots_a_off_sa'),
                       fenwick_a_off=Sum('fenwick_a_off_sa'), corsi_a_off=Sum('corsi_a_off_sa'),
                       goals_f_off=Sum('goals_f_off'), shots_f_off=Sum('shots_f_off_sa'), toi_off=Sum('toi_off'),
-                      fenwick_f_off=Sum('fenwick_f_off_sa'), corsi_f_off=Sum('corsi_f_off_sa'))
+                      fenwick_f_off=Sum('fenwick_f_off_sa'), corsi_f_off=Sum('corsi_f_off_sa'),
+                      xg_a=Sum('xg_a'), xg_f=Sum('xg_f'), xg_a_off=Sum('xg_a_off'), xg_f_off=Sum('xg_f_off'))
 
         # These columns are to hold non adjusted numbers for percentages when using score adjusted numbers
         cols = cols + ['shots_f_raw', 'shots_a_raw', 'fenwick_f_raw', 'fenwick_a_raw', 'shots_f_off_raw',
@@ -328,14 +315,15 @@ def filter_by_rel(data, toi, adjustment, split_by):
                       corsi_f=Sum('corsi_f'), goals_a_off=Sum('goals_a_off'), shots_a_off=Sum('shots_a_off'),
                       fenwick_a_off=Sum('fenwick_a_off'), corsi_a_off=Sum('corsi_a_off'),
                       goals_f_off=Sum('goals_f_off'), shots_f_off=Sum('shots_f_off'), toi_off=Sum('toi_off'),
-                      fenwick_f_off=Sum('fenwick_f_off'), corsi_f_off=Sum('corsi_f_off'))
+                      fenwick_f_off=Sum('fenwick_f_off'), corsi_f_off=Sum('corsi_f_off'), xg_a=Sum('xg_a'),
+                      xg_f=Sum('xg_f'), xg_a_off=Sum('xg_a_off'), xg_f_off=Sum('xg_f_off'))
 
     # Filter TOI
     data = filter_toi(data, toi)
 
     cols = cols + ['toi_on', 'goals_a', 'goals_f', 'shots_f', 'fenwick_f', 'corsi_f', 'shots_a', 'fenwick_a', 'corsi_a',
                    'shots_f_off', 'goals_f_off', 'fenwick_f_off', 'corsi_f_off', 'shots_a_off', 'goals_a_off',
-                   'fenwick_a_off', 'corsi_a_off', 'toi_off']
+                   'fenwick_a_off', 'corsi_a_off', 'toi_off', 'xg_f', 'xg_a', 'xg_a_off', 'xg_f_off']
 
     if split_by != 'Game':
         cols = cols + ['games']
@@ -352,12 +340,7 @@ def filter_by_zone(data, toi, split_by):
     :param split_by: game, season, or cumulative
     :return: list (of dicts) who match criteria
     """
-    if split_by == 'Season':
-        cols = ['player', 'player_id', 'season', 'team', 'position', 'handedness']
-    elif split_by == 'Cumulative':
-        cols = ['player', 'player_id', 'team', 'position', 'handedness']
-    else:
-        cols = ['player', 'player_id', 'season', 'game_id', 'team', 'date', 'opponent', 'home', 'position', 'handedness']
+    cols = get_split_type(split_by)
 
     data = data.values(*cols) \
         .annotate(games=Count('game_id', distinct=True), toi_on=Sum('toi_on'), face_off=Sum('face_off'),
@@ -386,6 +369,7 @@ def calculate_ind_stats(player, strength):
 
     player['ish%'] = get_pct(player['goals'], player['isf'])
     player['ifsh%'] = get_pct(player['goals'], player['ifen'])
+    player['ixfsh%'] = get_pct(player['ixg'], player['ifen'])
 
     player['assists'] = player['a1'] + player['a2']
     player['p'] = player['assists'] + player['goals']
@@ -398,9 +382,11 @@ def calculate_ind_stats(player, strength):
     player['p60'] = get_per_60(player['toi_on'], player['p'])
     player['p160'] = get_per_60(player['toi_on'], player['p1'])
     player['isf60'] = get_per_60(player['toi_on'], player['isf'])
+    player['ixg60'] = get_per_60(player['toi_on'], player['ixg'])
     player['ifen60'] = get_per_60(player['toi_on'], player['ifen'])
     player['icors60'] = get_per_60(player['toi_on'], player['icors'])
     player['face%'] = get_pct(player['ifac_win'], player['ifac_win']+player['ifac_loss'])
+    player['ixg'] = round(player['ixg'], 2)
 
     return player
 
@@ -416,33 +402,43 @@ def calculate_ice_stats(player, strength, adjustment):
     player['toi_on'] = format(player['toi_on'] / 60, '.2f')  # Convert to minutes
     player['strength'] = strength
 
-    # If this key then numbers are score adjusted so use these fields for percentages
+    # If this key is there then numbers are score adjusted so use these fields for percentages
     if 'shots_a_raw' in list(player.keys()):
         player['Sh%'] = get_pct(player['goals_f'], player['shots_f_raw'])
         player['fSh%'] = get_pct(player['goals_f'], player['fenwick_f_raw'])
+        player['xFSh%'] = get_pct(player['xg_f'], player['fenwick_f_raw'])
+
         player['Sv%'] = get_pct(player['shots_a_raw'] - player['goals_a'], player['shots_a_raw'])
         player['FSv%'] = get_pct(player['fenwick_a_raw'] - player['goals_a'], player['fenwick_a_raw'])
+        player['xFSv%'] = get_pct(player['fenwick_a_raw'] - player['xg_a'], player['fenwick_a_raw'])
         player['Miss%'] = get_pct(player['fenwick_a_raw'] - player['shots_a_raw'], player['fenwick_a_raw'])
     else:
         player['Sh%'] = get_pct(player['goals_f'], player['shots_f'])
         player['fSh%'] = get_pct(player['goals_f'], player['fenwick_f'])
+        player['xFSh%'] = get_pct(player['xg_f'], player['fenwick_f'])
+
         player['Sv%'] = get_pct(player['shots_a'] - player['goals_a'], player['shots_a'])
         player['FSv%'] = get_pct(player['fenwick_a'] - player['goals_a'], player['fenwick_a'])
+        player['xFSv%'] = get_pct(player['fenwick_a'] - player['xg_a'], player['fenwick_a'])
         player['Miss%'] = get_pct(player['fenwick_a'] - player['shots_a'], player['fenwick_a'])
 
     player['GF%'] = get_pct(player['goals_f'], player['goals_f']+player['goals_a'])
+    player['xGF%'] = get_pct(player['xg_f'], player['xg_f']+player['xg_a'])
     player['CF%'] = get_pct(player['corsi_f'], player['corsi_f']+player['corsi_a'])
     player['FF%'] = get_pct(player['fenwick_f'], player['fenwick_f']+player['fenwick_a'])
 
     player['shots_f_60'] = get_per_60(player['toi_on'], player['shots_f'])
     player['goals_f_60'] = get_per_60(player['toi_on'], player['goals_f'])
     player['fenwick_f_60'] = get_per_60(player['toi_on'], player['fenwick_f'])
+    player['xg_f_60'] = get_per_60(player['toi_on'], player['xg_f'])
     player['corsi_f_60'] = get_per_60(player['toi_on'], player['corsi_f'])
     player['shots_a_60'] = get_per_60(player['toi_on'], player['shots_a'])
     player['goals_a_60'] = get_per_60(player['toi_on'], player['goals_a'])
     player['fenwick_a_60'] = get_per_60(player['toi_on'], player['fenwick_a'])
+    player['xg_a_60'] = get_per_60(player['toi_on'], player['xg_a'])
     player['corsi_a_60'] = get_per_60(player['toi_on'], player['corsi_a'])
 
+    # Because score adjusted numbers aren't integers
     if adjustment == 'Score Adjusted':
         player['shots_f'] = format(player['shots_f'], '.2f')
         player['fenwick_f'] = format(player['fenwick_f'], '.2f')
@@ -450,6 +446,11 @@ def calculate_ice_stats(player, strength, adjustment):
         player['shots_a'] = format(player['shots_a'], '.2f')
         player['fenwick_a'] = format(player['fenwick_a'], '.2f')
         player['corsi_a'] = format(player['corsi_a'], '.2f')
+
+
+    # Rounding
+    player['xg_f'] = round(player['xg_f'], 2)
+    player['xg_a'] = round(player['xg_a'], 2)
 
     return player
 
@@ -471,27 +472,34 @@ def calculate_rel_stats(player, strength):
     gf_pct_off = get_pct(player['goals_f_off'], player['goals_f_off'] + player['goals_a_off'])
     cf_pct_off = get_pct(player['corsi_f_off'], player['corsi_f_off'] + player['corsi_a_off'])
     ff_pct_off = get_pct(player['fenwick_f_off'], player['fenwick_f_off'] + player['fenwick_a_off'])
+    xg_pct_off = get_pct(player['xg_f_off'], player['xg_f_off'] + player['xg_a_off'])
     shots_f_60_off = get_per_60(player['toi_off'], player['shots_f_off'])
     goals_f_60_off = get_per_60(player['toi_off'], player['goals_f_off'])
     fenwick_f_60_off = get_per_60(player['toi_off'], player['fenwick_f_off'])
+    xg_f_60_off = get_per_60(player['toi_off'], player['xg_f_off'])
     corsi_f_60_off = get_per_60(player['toi_off'], player['corsi_f_off'])
     shots_a_60_off = get_per_60(player['toi_off'], player['shots_a_off'])
     goals_a_60_off = get_per_60(player['toi_off'], player['goals_a_off'])
     fenwick_a_60_off = get_per_60(player['toi_off'], player['fenwick_a_off'])
+    xg_a_60_off = get_per_60(player['toi_off'], player['xg_a_off'])
     corsi_a_60_off = get_per_60(player['toi_off'], player['corsi_a_off'])
 
     # If this key then numbers are score adjusted so use these fields for percentages
     if 'shots_a_off_raw' in list(player.keys()):
         sh_pct_off = get_pct(player['goals_a_off'], player['shots_f_off_raw'])
         fsh_pct_off = get_pct(player['goals_f_off'], player['fenwick_f_off_raw'])
+        xfsh_pct_off = get_pct(player['xg_f_off'], player['fenwick_f_off_raw'])
         sv_pct_off = get_pct(player['shots_a_off_raw'] - player['goals_a_off'], player['shots_a_off_raw'])
         fsv_pct_off = get_pct(player['fenwick_a_off_raw'] - player['goals_a_off'], player['fenwick_a_off_raw'])
+        xfsv_pct_off = get_pct(player['fenwick_a_off_raw'] - player['xg_a_off'], player['fenwick_a_off_raw'])
         miss_pct_off = get_pct(player['fenwick_a_off_raw'] - player['shots_a_off_raw'], player['fenwick_a_off_raw'])
     else:
         sh_pct_off = get_pct(player['goals_a_off'], player['shots_f_off'])
         fsh_pct_off = get_pct(player['goals_f_off'], player['fenwick_f_off'])
+        xfsh_pct_off = get_pct(player['xg_f_off'], player['fenwick_f_off'])
         sv_pct_off = get_pct(player['shots_a_off'] - player['goals_a_off'], player['shots_a_off'])
         fsv_pct_off = get_pct(player['fenwick_a_off'] - player['goals_a_off'], player['fenwick_a_off'])
+        xfsv_pct_off = get_pct(player['fenwick_a_off'] - player['xg_a_off'], player['fenwick_a_off'])
         miss_pct_off = get_pct(player['fenwick_a_off'] - player['shots_a_off'], player['fenwick_a_off'])
 
     """
@@ -500,46 +508,57 @@ def calculate_rel_stats(player, strength):
     player['GF%_rel'] = get_rel(get_pct(player['goals_f'], player['goals_f'] + player['goals_a']), gf_pct_off)
     player['CF%_rel'] = get_rel(get_pct(player['corsi_f'], player['corsi_f'] + player['corsi_a']), cf_pct_off)
     player['FF%_rel'] = get_rel(get_pct(player['fenwick_f'], player['fenwick_f'] + player['fenwick_a']), ff_pct_off)
+    player['xGF%_rel'] = get_rel(get_pct(player['xg_f'], player['xg_f'] + player['xg_a']), xg_pct_off)
 
     player['shots_f_60_rel'] = get_rel(get_per_60(player['toi_on'], player['shots_f']), shots_f_60_off)
     player['goals_f_60_rel'] = get_rel(get_per_60(player['toi_on'], player['goals_f']), goals_f_60_off)
     player['fenwick_f_60_rel'] = get_rel(get_per_60(player['toi_on'], player['fenwick_f']), fenwick_f_60_off)
+    player['xg_f_60_rel'] = get_rel(get_per_60(player['toi_on'], player['xg_f']), xg_f_60_off)
     player['corsi_f_60_rel'] = get_rel(get_per_60(player['toi_on'], player['corsi_f']), corsi_f_60_off)
     player['shots_a_60_rel'] = get_rel(get_per_60(player['toi_on'], player['shots_a']), shots_a_60_off)
     player['goals_a_60_rel'] = get_rel(get_per_60(player['toi_on'], player['goals_a']), goals_a_60_off)
     player['fenwick_a_60_rel'] = get_rel(get_per_60(player['toi_on'], player['fenwick_a']), fenwick_a_60_off)
+    player['xg_a_60_rel'] = get_rel(get_per_60(player['toi_on'], player['xg_a']), xg_a_60_off)
     player['corsi_a_60_rel'] = get_rel(get_per_60(player['toi_on'], player['corsi_a']), corsi_a_60_off)
 
     # If this key then numbers are score adjusted so use these fields for percentages
     if 'shots_a_off_raw' in list(player.keys()):
         player['Sh%_rel'] = get_rel(get_pct(player['goals_f'], player['shots_f_raw']), sh_pct_off)
         player['fSh%_rel'] = get_rel(get_pct(player['goals_f'], player['fenwick_f_raw']), fsh_pct_off)
+        player['xfSh%_rel'] = get_rel(get_pct(player['xg_f'], player['fenwick_f_raw']), xfsh_pct_off)
         player['Sv%_rel'] = get_rel(get_pct(player['shots_a_raw'] - player['goals_a'], player['shots_a_raw']), sv_pct_off)
         player['FSv%_rel'] = get_rel(get_pct(player['fenwick_a_raw'] - player['goals_a'], player['fenwick_a_raw']), fsv_pct_off)
+        player['xFSv%_rel'] = get_rel(get_pct(player['fenwick_a_raw'] - player['xg_a'], player['fenwick_a_raw']), xfsv_pct_off)
         player['Miss%_rel'] = get_rel(get_pct(player['fenwick_a_raw'] - player['shots_a_raw'], player['fenwick_a_raw']), miss_pct_off)
     else:
         player['Sh%_rel'] = get_rel(get_pct(player['goals_f'], player['shots_f']), sh_pct_off)
         player['fSh%_rel'] = get_rel(get_pct(player['goals_f'], player['fenwick_f']), fsh_pct_off)
+        player['xfSh%_rel'] = get_rel(get_pct(player['xg_f'], player['fenwick_f']), xfsh_pct_off)
         player['Sv%_rel'] = get_rel(get_pct(player['shots_a'] - player['goals_a'], player['shots_a']), sv_pct_off)
         player['FSv%_rel'] = get_rel(get_pct(player['fenwick_a'] - player['goals_a'], player['fenwick_a']), fsv_pct_off)
+        player['xFSv%_rel'] = get_rel(get_pct(player['fenwick_a'] - player['xg_a'], player['fenwick_a']), xfsv_pct_off)
         player['Miss%_rel'] = get_rel(get_pct(player['fenwick_a'] - player['shots_a'], player['fenwick_a']), miss_pct_off)
 
     # Delete a bunch of shit
     del player['goals_f']
     del player['shots_f']
     del player['fenwick_f']
+    del player['xg_f']
     del player['corsi_f']
     del player['goals_a']
     del player['shots_a']
     del player['fenwick_a']
+    del player['xg_a']
     del player['corsi_a']
     del player['goals_f_off']
     del player['shots_f_off']
     del player['fenwick_f_off']
+    del player['xg_f_off']
     del player['corsi_f_off']
     del player['goals_a_off']
     del player['shots_a_off']
     del player['fenwick_a_off']
+    del player['xg_a_off']
     del player['corsi_a_off']
 
     if 'shots_a_off_raw' in list(player.keys()):
@@ -576,6 +595,22 @@ def calculate_zone_stats(player, strength):
     return player
 
 
+def get_split_type(split_by):
+    """
+    Return base columns for split type
+    
+    :param split_by: Season, Cumulative, Game
+    
+    :return: base cols
+    """
+    if split_by == 'Season':
+        return ['player', 'player_id', 'season', 'team', 'position', 'handedness']
+    elif split_by == 'Cumulative':
+        return ['player', 'player_id', 'team', 'position', 'handedness']
+    else:
+        return ['player', 'player_id', 'season', 'game_id', 'team', 'date', 'opponent', 'home', 'position', 'handedness']
+
+
 def get_pct(numerator, denominator):
     """
     return pct given numerator and denominator
@@ -598,6 +633,7 @@ def get_rel(on, off):
     :param off: stats off ice
     :return: rel
     """
+
     try:
         return format(float(on) - float(off), '.2f')
     except (TypeError, ValueError):

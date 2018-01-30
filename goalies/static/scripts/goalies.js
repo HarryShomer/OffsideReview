@@ -33,15 +33,62 @@ $.noConflict();
                 }
             );
             var customAdapter = $.fn.select2.amd.require('select2/data/customAdapter');
-
             var search_array = []
+
             var searchBar = $("#search").select2({
-                placeholder: "Search a Player",
+                placeholder: "Search for a Goalie",
                 allowClear: true,
                 dataAdapter: customAdapter,
                 data: search_array,
                 maximumSelectionLength: 10
             });
+
+
+            //All possible table columns
+            table_columns= [
+                        { "title": "Player", data: 'player' },
+                        { "title": "Season" , data: 'season'},
+                        { "title": "GP" , data: 'games'},
+                        { "title": "Game.ID" , data: 'game_id'},
+                        { "title": "Date" , data: 'date'},
+                        { "title": "Team" , data: 'team'},
+                        { "title": "Opponent" , data: 'opponent'},
+                        { "title": "Venue" , data: 'home'},
+                        { "title": "Strength" , data: 'strength'},
+                        { "title": "TOI" , data: 'toi_on'},
+                        { "title": "GA" , data: 'goals_a'},
+                        { "title": "SA" , data: 'shots_a'},
+                        { "title": "FA" , data: 'fenwick_a'},
+                        { "title": "xGA" , data: 'xg_a'},
+                        { "title": "CA" , data: 'corsi_a'},
+                        { "title": "GA60" , data: 'goals_a_60'},
+                        { "title": "SA60" , data: 'shots_a_60'},
+                        { "title": "FA60" , data: 'fenwick_a_60'},
+                        { "title": "xGA60" , data: 'xg_a_60'},
+                        { "title": "CA60" , data: 'corsi_a_60'},
+                        { "title": "Sv%" , data: 'Sv%'},
+                        { "title": "xFSv%" , data: 'xFSv%'},
+                        { "title": "FSv%" , data: 'FSv%'},
+                        { "title": "Adj Sv%" , data: 'adj_sv'},
+                        { "title": "Miss%" , data: 'Miss%'}
+            ]
+
+            //Generic table with no data when request page...need to query to get data
+            table = $('#mydata').DataTable({
+                dom: 'Bfrtip',
+                data:[],
+                columns: table_columns,
+                info: false,
+                "deferRender": true,
+                "searching":   false,
+                "pageLength": 50,
+                buttons: [
+                    { extend: 'csvHtml5', text: 'Export Data' }
+                ],
+                "scrollX": true,
+                fixedColumns: true
+            } );
+
 
 
             //Get query when click load button
@@ -96,48 +143,6 @@ $.noConflict();
 
                 });
             });
-
-
-            //All possible table columns
-            table_columns= [
-                        { "title": "Player", data: 'player' },
-                        { "title": "Season" , data: 'season'},
-                        { "title": "GP" , data: 'games'},
-                        { "title": "Game.ID" , data: 'game_id'},
-                        { "title": "Date" , data: 'date'},
-                        { "title": "Team" , data: 'team'},
-                        { "title": "Opponent" , data: 'opponent'},
-                        { "title": "Venue" , data: 'home'},
-                        { "title": "Strength" , data: 'strength'},
-                        { "title": "TOI" , data: 'toi_on'},
-                        { "title": "GA" , data: 'goals_a'},
-                        { "title": "SA" , data: 'shots_a'},
-                        { "title": "FA" , data: 'fenwick_a'},
-                        { "title": "CA" , data: 'corsi_a'},
-                        { "title": "GA60" , data: 'goals_a_60'},
-                        { "title": "SA60" , data: 'shots_a_60'},
-                        { "title": "FA60" , data: 'fenwick_a_60'},
-                        { "title": "CA60" , data: 'corsi_a_60'},
-                        { "title": "Sv%" , data: 'Sv%'},
-                        { "title": "FSv%" , data: 'FSv%'},
-                        { "title": "Miss%" , data: 'Miss%'}
-            ]
-
-            //Generic table with no data when request page...need to query to get data
-            table = $('#mydata').DataTable({
-                dom: 'Bfrtip',
-                data:[],
-                columns: table_columns,
-                info: false,
-                "deferRender": true,
-                "searching":   false,
-                "pageLength": 50,
-                buttons: [
-                    { extend: 'csvHtml5', text: 'Export Data' }
-                ],
-                "scrollX": true,
-                fixedColumns: true
-            } );
 
 
             function return_table_columns(table_type){

@@ -1,6 +1,79 @@
 $.noConflict();
         jQuery(document).ready(function( $ ) {
 
+            //All possible table columns
+            table_columns= [
+                        { "title": "Team", data: 'team' },
+                        { "title": "Season" , data: 'season'},
+                        { "title": "GP" , data: 'games'},
+                        { "title": "Game.ID" , data: 'game_id'},
+                        { "title": "Date" , data: 'date'},
+                        { "title": "Opponent" , data: 'opponent'},
+                        { "title": "Venue" , data: 'home'},
+                        { "title": "Strength" , data: 'strength'},
+                        { "title": "TOI" , data: 'toi'},
+                        { "title": "GF" , data: 'goals_f'},
+                        { "title": "xGF" , data: 'xg_f'},
+                        { "title": "SF" , data: 'shots_f'},
+                        { "title": "FF" , data: 'fenwick_f'},
+                        { "title": "CF" , data: 'corsi_f'},
+                        { "title": "GA" , data: 'goals_a'},
+                        { "title": "xGA" , data: 'xg_a'},
+                        { "title": "SA" , data: 'shots_a'},
+                        { "title": "FA" , data: 'fenwick_a'},
+                        { "title": "CA" , data: 'corsi_a'},
+                        { "title": "GF%" , data: 'GF%'},
+                        { "title": "xGF%" , data: 'xGF%'},
+                        { "title": "CF%" , data: 'CF%'},
+                        { "title": "FF%" , data: 'FF%'},
+                        { "title": "GF60" , data: 'goals_f_60'},
+                        { "title": "xGF60" , data: 'xg_f_60'},
+                        { "title": "SF60" , data: 'shots_f_60'},
+                        { "title": "FF60" , data: 'fenwick_f_60'},
+                        { "title": "CF60" , data: 'corsi_f_60'},
+                        { "title": "GA60" , data: 'goals_a_60'},
+                        { "title": "xGA60" , data: 'xg_a_60'},
+                        { "title": "SA60" , data: 'shots_a_60'},
+                        { "title": "FA60" , data: 'fenwick_a_60'},
+                        { "title": "CA60" , data: 'corsi_a_60'},
+                        { "title": "Sh%" , data: 'Sh%'},
+                        { "title": "FSh%" , data: 'fSh%'},
+                        { "title": "xFSh%" , data: 'xfSh%'},
+                        { "title": "Sv%" , data: 'Sv%'},
+                        { "title": "FSv%" , data: 'FSv%'},
+                        { "title": "xFSv%" , data: 'xFSv%'},
+                        { "title": "Miss%" , data: 'Miss%'},
+                        { "title": "PENT" , data: 'pend'},
+                        { "title": "PEND" , data: 'pent'},
+                        { "title": "HF" , data: 'hits_f'},
+                        { "title": "HA" , data: 'hits_a'},
+                        { "title": "Takes" , data: 'takes'},
+                        { "title": "Gives" , data: 'gives'},
+                        { "title": "Faceoff Wins" , data: 'face_w'},
+                        { "title": "Faceoff Losses" , data: 'face_l'},
+                        { "title": "Neu. Faceoffs" , data: 'face_neu'},
+                        { "title": "Off. Faceoffs" , data: 'face_off'},
+                        { "title": "Def. Faceoffs" , data: 'face_def'},
+            ]
+
+            //Generic table with no data when request page...need to query to get data
+            table = $('#mydata').DataTable({
+                dom: 'Bfrtip',
+                data:[],
+                columns: table_columns,
+                info: false,
+                "deferRender": true,
+                "searching":   false,
+                "pageLength": 50,
+                buttons: [
+                   { extend: 'csvHtml5', text: 'Export Data' }
+                ],
+                "scrollX": true,
+                fixedColumns: true
+            } );
+
+
+
             //Get query when click load button
             $("#loadButton").click(function(){
 
@@ -53,71 +126,6 @@ $.noConflict();
 
                 });
             });
-
-
-            //All possible table columns
-            table_columns= [
-                        { "title": "Team", data: 'team' },
-                        { "title": "Season" , data: 'season'},
-                        { "title": "GP" , data: 'games'},
-                        { "title": "Game.ID" , data: 'game_id'},
-                        { "title": "Date" , data: 'date'},
-                        { "title": "Opponent" , data: 'opponent'},
-                        { "title": "Venue" , data: 'home'},
-                        { "title": "Strength" , data: 'strength'},
-                        { "title": "TOI" , data: 'toi'},
-                        { "title": "GF" , data: 'goals_f'},
-                        { "title": "SF" , data: 'shots_f'},
-                        { "title": "FF" , data: 'fenwick_f'},
-                        { "title": "CF" , data: 'corsi_f'},
-                        { "title": "GA" , data: 'goals_a'},
-                        { "title": "SA" , data: 'shots_a'},
-                        { "title": "FA" , data: 'fenwick_a'},
-                        { "title": "CA" , data: 'corsi_a'},
-                        { "title": "GF%" , data: 'GF%'},
-                        { "title": "CF%" , data: 'CF%'},
-                        { "title": "FF%" , data: 'FF%'},
-                        { "title": "GF60" , data: 'goals_f_60'},
-                        { "title": "SF60" , data: 'shots_f_60'},
-                        { "title": "FF60" , data: 'fenwick_f_60'},
-                        { "title": "CF60" , data: 'corsi_f_60'},
-                        { "title": "GA60" , data: 'goals_a_60'},
-                        { "title": "SA60" , data: 'shots_a_60'},
-                        { "title": "FA60" , data: 'fenwick_a_60'},
-                        { "title": "CA60" , data: 'corsi_a_60'},
-                        { "title": "Sh%" , data: 'Sh%'},
-                        { "title": "FSh%" , data: 'fSh%'},
-                        { "title": "Sv%" , data: 'Sv%'},
-                        { "title": "FSv%" , data: 'FSv%'},
-                        { "title": "Miss%" , data: 'Miss%'},
-                        { "title": "PENT" , data: 'pend'},
-                        { "title": "PEND" , data: 'pent'},
-                        { "title": "HF" , data: 'hits_f'},
-                        { "title": "HA" , data: 'hits_a'},
-                        { "title": "Takeaways" , data: 'takes'},
-                        { "title": "Giveaways" , data: 'gives'},
-                        { "title": "Faceoff Wins" , data: 'face_w'},
-                        { "title": "Faceoff Losses" , data: 'face_l'},
-                        { "title": "Neu. Faceoffs" , data: 'face_neu'},
-                        { "title": "Off. Faceoffs" , data: 'face_off'},
-                        { "title": "Def. Faceoffs" , data: 'face_def'},
-            ]
-
-            //Generic table with no data when request page...need to query to get data
-            table = $('#mydata').DataTable({
-                dom: 'Bfrtip',
-                data:[],
-                columns: table_columns,
-                info: false,
-                "deferRender": true,
-                "searching":   false,
-                "pageLength": 50,
-                buttons: [
-                   { extend: 'csvHtml5', text: 'Export Data' }
-                ],
-                "scrollX": true,
-                fixedColumns: true
-            } );
 
 
             function return_table_columns(table_type){

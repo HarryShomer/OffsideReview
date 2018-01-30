@@ -61,7 +61,7 @@ def filter_strength(data, strength):
     if strength != 'All Situations':
         # If it's has a 6 they obviously want empty net stuff otherwise don't bother
         if '6' in strength:
-            return data.filter(strength=strength)
+            return data.filter(strength=strength).filter(if_empty=1)
         else:
             return data.filter(strength=strength).filter(if_empty=0)
     else:
@@ -138,8 +138,8 @@ def filter_by_cumulative(data, toi, adjustment):
     :return: list (of dicts) who match criteria
     """
     cols = ['team', 'games', 'goals_a', 'goals_f', 'shots_a', 'shots_f', 'fenwick_a', 'fenwick_f', 'corsi_a', 'corsi_f',
-            'pent', 'pend', 'hits_f', 'hits_a', 'gives', 'takes', 'face_l', 'face_w', 'face_off', 'face_def', 'face_neu'
-            , 'toi']
+            'xg_a', 'xg_f', 'pent', 'pend', 'hits_f', 'hits_a', 'gives', 'takes', 'face_l', 'face_w', 'face_off',
+            'face_def', 'face_neu', 'toi']
 
     if adjustment == 'Score Adjusted':
         # These columns are to hold non adjusted numbers for percentages when using score adjusted numbers
@@ -152,7 +152,8 @@ def filter_by_cumulative(data, toi, adjustment):
                       goals_f=Sum('goals_f'), toi=Sum('toi'),  shots_f=Sum('shots_f_sa'), fenwick_f=Sum('fenwick_f_sa'),
                       corsi_f=Sum('corsi_f_sa'), pent=Sum('pent'), pend=Sum('pend'), gives=Sum('gives'), takes=Sum('takes'),
                       hits_f=Sum('hits_f'), hits_a=Sum('hits_a'), face_l=Sum('face_l'), face_w=Sum('face_w'),
-                      face_off=Sum('face_off'), face_def=Sum('face_def'), face_neu=Sum('face_neu'))
+                      face_off=Sum('face_off'), face_def=Sum('face_def'), face_neu=Sum('face_neu'),
+                      xg_a=Sum('xg_a'), xg_f=Sum('xg_f'),)
     else:
         data = data.values('team') \
             .annotate(games=Count('game_id', distinct=True), goals_a=Sum('goals_a'), shots_a=Sum('shots_a'),
@@ -160,7 +161,7 @@ def filter_by_cumulative(data, toi, adjustment):
                       shots_f=Sum('shots_f'), fenwick_f=Sum('fenwick_f'), corsi_f=Sum('corsi_f'), pent=Sum('pent'),
                       pend=Sum('pend'), gives=Sum('gives'), takes=Sum('takes'), hits_f=Sum('hits_f'),
                       hits_a=Sum('hits_a'), face_l=Sum('face_l'), face_w=Sum('face_w'), face_off=Sum('face_off'),
-                      face_def=Sum('face_def'), face_neu=Sum('face_neu'))
+                      face_def=Sum('face_def'), face_neu=Sum('face_neu'), xg_a=Sum('xg_a'), xg_f=Sum('xg_f'))
 
     data = filter_toi(data, toi)
 
@@ -177,8 +178,8 @@ def filter_by_season(data, toi, adjustment):
     :return: list (of dicts) who match criteria
     """
     cols = ['team', 'season', 'games', 'goals_a', 'goals_f', 'shots_a', 'shots_f', 'fenwick_a', 'fenwick_f', 'corsi_a',
-            'corsi_f', 'pent', 'pend', 'hits_f', 'hits_a', 'gives', 'takes', 'face_l', 'face_w', 'face_off', 'face_def',
-            'face_neu', 'toi']
+            'corsi_f', 'xg_a', 'xg_f', 'pent', 'pend', 'hits_f', 'hits_a', 'gives', 'takes', 'face_l', 'face_w',
+            'face_off', 'face_def', 'face_neu', 'toi']
 
     if adjustment == 'Score Adjusted':
         # These columns are to hold non adjusted numbers for percentages when using score adjusted numbers
@@ -191,7 +192,8 @@ def filter_by_season(data, toi, adjustment):
                       goals_f=Sum('goals_f'), toi=Sum('toi'), shots_f=Sum('shots_f_sa'), fenwick_f=Sum('fenwick_f_sa'),
                       corsi_f=Sum('corsi_f_sa'), pent=Sum('pent'), pend=Sum('pend'), gives=Sum('gives'), takes=Sum('takes'),
                       hits_f=Sum('hits_f'), hits_a=Sum('hits_a'), face_l=Sum('face_l'), face_w=Sum('face_w'),
-                      face_off=Sum('face_off'), face_def=Sum('face_def'), face_neu=Sum('face_neu'), )
+                      face_off=Sum('face_off'), face_def=Sum('face_def'), face_neu=Sum('face_neu'),
+                      xg_a=Sum('xg_a'), xg_f=Sum('xg_f'))
     else:
         data = data.values('team', 'season') \
             .annotate(games=Count('game_id', distinct=True), goals_a=Sum('goals_a'), shots_a=Sum('shots_a'),
@@ -199,7 +201,7 @@ def filter_by_season(data, toi, adjustment):
                       shots_f=Sum('shots_f'), fenwick_f=Sum('fenwick_f'), corsi_f=Sum('corsi_f'), pent=Sum('pent'),
                       pend=Sum('pend'), gives=Sum('gives'), takes=Sum('takes'), hits_f=Sum('hits_f'),
                       hits_a=Sum('hits_a'), face_l=Sum('face_l'), face_w=Sum('face_w'), face_off=Sum('face_off'),
-                      face_def=Sum('face_def'), face_neu=Sum('face_neu'))
+                      face_def=Sum('face_def'), face_neu=Sum('face_neu'), xg_a=Sum('xg_a'), xg_f=Sum('xg_f'))
 
     data = filter_toi(data, toi)
 
@@ -217,8 +219,8 @@ def filter_by_game(data, toi, adjustment):
     'game_id', 'date', 'opponent'
     """
     cols = ['team', 'season', 'game_id', 'date', 'opponent', 'home', 'goals_a', 'goals_f', 'shots_a', 'shots_f',
-            'fenwick_a', 'fenwick_f', 'corsi_a', 'corsi_f', 'pent', 'pend', 'hits_f', 'hits_a', 'gives', 'takes',
-            'face_l', 'face_w', 'face_off', 'face_def', 'face_neu', 'toi']
+            'fenwick_a', 'fenwick_f', 'corsi_a', 'corsi_f', 'xg_a', 'xg_f', 'pent', 'pend', 'hits_f', 'hits_a',
+            'gives', 'takes', 'face_l', 'face_w', 'face_off', 'face_def', 'face_neu', 'toi']
 
     if adjustment == 'Score Adjusted':
         # These columns are to hold non adjusted numbers for percentages when using score adjusted numbers
@@ -231,14 +233,15 @@ def filter_by_game(data, toi, adjustment):
                       shots_f=Sum('shots_f_sa'), fenwick_f=Sum('fenwick_f_sa'), corsi_f=Sum('corsi_f_sa'),
                       pent=Sum('pent'), pend=Sum('pend'), gives=Sum('gives'), takes=Sum('takes'), hits_f=Sum('hits_f'),
                       hits_a=Sum('hits_a'), face_l=Sum('face_l'), face_w=Sum('face_w'), face_off=Sum('face_off'),
-                      face_def=Sum('face_def'), face_neu=Sum('face_neu'))
+                      face_def=Sum('face_def'), face_neu=Sum('face_neu'), xg_a=Sum('xg_a'), xg_f=Sum('xg_f'))
     else:
         data = data.values('team', 'season', 'game_id', 'date', 'opponent', 'home') \
             .annotate(goals_a=Sum('goals_a'), shots_a=Sum('shots_a'), fenwick_a=Sum('fenwick_a'), corsi_a=Sum('corsi_a'),
                       goals_f=Sum('goals_f'), toi=Sum('toi'), shots_f=Sum('shots_f'), fenwick_f=Sum('fenwick_f'),
                       corsi_f=Sum('corsi_f'), pent=Sum('pent'), pend=Sum('pend'), gives=Sum('gives'), takes=Sum('takes'),
                       hits_f=Sum('hits_f'), hits_a=Sum('hits_a'), face_l=Sum('face_l'), face_w=Sum('face_w'),
-                      face_off=Sum('face_off'), face_def=Sum('face_def'), face_neu=Sum('face_neu'))
+                      face_off=Sum('face_off'), face_def=Sum('face_def'), face_neu=Sum('face_neu'),
+                      xg_a=Sum('xg_a'), xg_f=Sum('xg_f'))
 
     data = filter_toi(data, toi)
 
@@ -261,28 +264,35 @@ def calculate_statistics(team, strength, adjustment):
         team['Sv%'] = get_pct(team['shots_a_raw'] - team['goals_a'], team['shots_a_raw'])
         team['Sh%'] = get_pct(team['goals_f'], team['shots_f_raw'])
         team['fSh%'] = get_pct(team['goals_f'], team['fenwick_f_raw'])
+        team['xfSh%'] = get_pct(team['xg_f'], team['fenwick_f_raw'])
         team['FSv%'] = get_pct(team['fenwick_a_raw'] - team['goals_a'], team['fenwick_a_raw'])
+        team['xFSv%'] = get_pct(team['fenwick_a_raw'] - team['xg_a'], team['fenwick_a_raw'])
         team['Miss%'] = get_pct(team['fenwick_a_raw'] - team['shots_a_raw'], team['fenwick_a_raw'])
     else:
         team['Sv%'] = get_pct(team['shots_a']-team['goals_a'], team['shots_a'])
         team['Sh%'] = get_pct(team['goals_f'], team['shots_f'])
         team['fSh%'] = get_pct(team['goals_f'], team['fenwick_f'])
+        team['xfSh%'] = get_pct(team['xg_f'], team['fenwick_f'])
         team['FSv%'] = get_pct(team['fenwick_a'] - team['goals_a'], team['fenwick_a'])
+        team['xFSv%'] = get_pct(team['fenwick_a'] - team['xg_a'], team['fenwick_a'])
         team['Miss%'] = get_pct(team['fenwick_a'] - team['shots_a'], team['fenwick_a'])
 
     team['GF%'] = get_pct(team['goals_f'], team['goals_a'] + team['goals_f'])
     team['FF%'] = get_pct(team['fenwick_f'], team['fenwick_a'] + team['fenwick_f'])
     team['CF%'] = get_pct(team['corsi_f'], team['corsi_a'] + team['corsi_f'])
+    team['xGF%'] = get_pct(team['xg_f'], team['xg_a'] + team['xg_f'])
 
     team['shots_f_60'] = get_per_60(team['toi'], team['shots_f'])
     team['goals_f_60'] = get_per_60(team['toi'], team['goals_f'])
     team['fenwick_f_60'] = get_per_60(team['toi'], team['fenwick_f'])
     team['corsi_f_60'] = get_per_60(team['toi'], team['corsi_f'])
+    team['xg_f_60'] = get_per_60(team['toi'], team['xg_f'])
 
     team['shots_a_60'] = get_per_60(team['toi'], team['shots_a'])
     team['goals_a_60'] = get_per_60(team['toi'], team['goals_a'])
     team['fenwick_a_60'] = get_per_60(team['toi'], team['fenwick_a'])
     team['corsi_a_60'] = get_per_60(team['toi'], team['corsi_a'])
+    team['xg_a_60'] = get_per_60(team['toi'], team['xg_a'])
 
     if adjustment == 'Score Adjusted':
         team['shots_f'] = format(team['shots_f'], '.2f')
@@ -291,6 +301,10 @@ def calculate_statistics(team, strength, adjustment):
         team['shots_a'] = format(team['shots_a'], '.2f')
         team['fenwick_a'] = format(team['fenwick_a'], '.2f')
         team['corsi_a'] = format(team['corsi_a'], '.2f')
+
+    # Decimal places...
+    team['xg_f'] = format(team['xg_f'], '.2f')
+    team['xg_a'] = format(team['xg_a'], '.2f')
 
     return team
 

@@ -14,10 +14,12 @@ class Teams(models.Model):
     shots_f = models.IntegerField(null=True)
     goals_f = models.IntegerField(null=True)
     fenwick_f = models.IntegerField(null=True)
+    xg_f = models.FloatField(null=True)
     corsi_f = models.IntegerField(null=True)
     shots_a = models.IntegerField(null=True)
     goals_a = models.IntegerField(null=True)
     fenwick_a = models.IntegerField(null=True)
+    xg_a = models.FloatField(null=True)
     corsi_a = models.IntegerField(null=True)
     pent = models.IntegerField(null=True)
     pend = models.IntegerField(null=True)
@@ -41,3 +43,5 @@ class Teams(models.Model):
 
     def __str__(self):
         return self.team
+
+

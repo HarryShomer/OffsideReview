@@ -15,6 +15,7 @@ class Goalies(models.Model):
     shots_a = models.IntegerField(null=True)
     goals_a = models.IntegerField(null=True)
     fenwick_a = models.IntegerField(null=True)
+    xg_a = models.FloatField(null=True)
     corsi_a = models.IntegerField(null=True)
     toi_on = models.IntegerField(null=True)
     toi_off = models.IntegerField(null=True)
@@ -26,6 +27,10 @@ class Goalies(models.Model):
 
     def __str__(self):
         return self.player
+
+
+
+
 
 
 

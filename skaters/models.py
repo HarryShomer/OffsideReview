@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Skaters(models.Model):
-
+    
     player = models.CharField(max_length=30, default='')
     player_id = models.CharField(max_length=7, default='')
     position = models.CharField(max_length=3, default='', null=True)
@@ -20,6 +20,7 @@ class Skaters(models.Model):
     a2 = models.IntegerField(null=True)
     isf = models.IntegerField(null=True)
     ifen = models.IntegerField(null=True)
+    ixg = models.FloatField(null=True)
     icors = models.IntegerField(null=True)
     iblocks = models.IntegerField(null=True)
     pen_drawn = models.IntegerField(null=True)
@@ -33,10 +34,12 @@ class Skaters(models.Model):
     shots_f = models.IntegerField(null=True)
     goals_f = models.IntegerField(null=True)
     fenwick_f = models.IntegerField(null=True)
+    xg_f = models.FloatField(null=True)
     corsi_f = models.IntegerField(null=True)
     shots_a = models.IntegerField(null=True)
     goals_a = models.IntegerField(null=True)
     fenwick_a = models.IntegerField(null=True)
+    xg_a = models.FloatField(null=True)
     corsi_a = models.IntegerField(null=True)
     shots_f_sa = models.FloatField(null=True)
     fenwick_f_sa = models.FloatField(null=True)
@@ -51,10 +54,12 @@ class Skaters(models.Model):
     shots_f_off = models.IntegerField(null=True)
     goals_f_off = models.IntegerField(null=True)
     fenwick_f_off = models.IntegerField(null=True)
+    xg_f_off = models.FloatField(null=True)
     corsi_f_off = models.IntegerField(null=True)
     shots_a_off = models.IntegerField(null=True)
     goals_a_off = models.IntegerField(null=True)
     fenwick_a_off = models.IntegerField(null=True)
+    xg_a_off = models.FloatField(null=True)
     corsi_a_off = models.IntegerField(null=True)
     shots_f_off_sa = models.FloatField(null=True)
     fenwick_f_off_sa = models.FloatField(null=True)
@@ -70,6 +75,8 @@ class Skaters(models.Model):
 
     def __str__(self):
         return self.player
+
+
         
         
 

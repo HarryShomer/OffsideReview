@@ -3,7 +3,6 @@ from .models import Goalies
 from django.http import JsonResponse
 from django.db.models import Sum, Count
 from django.db.models import F
-from django.core import serializers
 
 
 class IndexView(generic.ListView):
@@ -78,7 +77,7 @@ def filter_strength(data, strength):
     if strength != 'All Situations':
         # If it's has a 6 they obviously want empty net stuff otherwise don't bother
         if '6' in strength:
-            return data.filter(strength=strength)
+            return data.filter(strength=strength).filter(if_empty=1)
         else:
             return data.filter(strength=strength).filter(if_empty=0)
     else:
@@ -166,7 +165,7 @@ def filter_by_cumulative(data, toi, adjustment):
     :param adjustment: ex: "Score Adjusted"
     :return: list (of dicts) who match criteria
     """
-    cols = ['player', 'games', 'team', 'games', 'goals_a', 'shots_a', 'fenwick_a', 'corsi_a', 'toi_on']
+    cols = ['player', 'games', 'team', 'games', 'goals_a', 'shots_a', 'fenwick_a', 'xg_a', 'corsi_a', 'toi_on']
 
     if adjustment == 'Score Adjusted':
         # These columns are to hold non adjusted numbers for percentages when using score adjusted numbers
@@ -175,11 +174,11 @@ def filter_by_cumulative(data, toi, adjustment):
         data = data.values('player', 'player_id', 'team')\
             .annotate(games=Count('game_id', distinct=True), goals_a=Sum('goals_a'), shots_a_raw=Sum('shots_a'),
                       fenwick_a_raw=Sum('fenwick_a'), shots_a=Sum('shots_a_sa'), fenwick_a=Sum('fenwick_a_sa'),
-                      corsi_a=Sum('corsi_a_sa'), toi_on=Sum('toi_on'))
+                      corsi_a=Sum('corsi_a_sa'), xg_a=Sum('xg_a'), toi_on=Sum('toi_on'))
     else:
         data = data.values('player', 'player_id', 'team') \
             .annotate(games=Count('game_id', distinct=True), goals_a=Sum('goals_a'), shots_a=Sum('shots_a'),
-                      fenwick_a=Sum('fenwick_a'), corsi_a=Sum('corsi_a'), toi_on=Sum('toi_on'))
+                      fenwick_a=Sum('fenwick_a'), corsi_a=Sum('corsi_a'), xg_a=Sum('xg_a'), toi_on=Sum('toi_on'))
 
     data = filter_toi(data, toi)
 
@@ -195,7 +194,7 @@ def filter_by_season(data, toi, adjustment):
     :param adjustment: ex: "Score Adjusted"
     :return: list (of dicts) who match criteria
     """
-    cols = ['player', 'games', 'team', 'season', 'games', 'shots_a', 'goals_a', 'fenwick_a', 'corsi_a', 'toi_on']
+    cols = ['player', 'games', 'team', 'season', 'games', 'shots_a', 'goals_a', 'fenwick_a', 'xg_a', 'corsi_a', 'toi_on']
 
     if adjustment == 'Score Adjusted':
         # These columns are to hold non adjusted numbers for percentages when using score adjusted numbers
@@ -204,11 +203,11 @@ def filter_by_season(data, toi, adjustment):
         data = data.values('player', 'player_id', 'season', 'team') \
             .annotate(games=Count('game_id', distinct=True), goals_a=Sum('goals_a'), shots_a_raw=Sum('shots_a'),
                       fenwick_a_raw=Sum('fenwick_a'), shots_a=Sum('shots_a_sa'), fenwick_a=Sum('fenwick_a_sa'),
-                      corsi_a=Sum('corsi_a_sa'), toi_on=Sum('toi_on'))
+                      corsi_a=Sum('corsi_a_sa'), xg_a=Sum('xg_a'), toi_on=Sum('toi_on'))
     else:
         data = data.values('player', 'player_id', 'season', 'team')\
             .annotate(games=Count('game_id', distinct=True), shots_a=Sum('shots_a'), goals_a=Sum('goals_a'),
-                      fenwick_a=Sum('fenwick_a'), corsi_a=Sum('corsi_a'), toi_on=Sum('toi_on'))
+                      fenwick_a=Sum('fenwick_a'), corsi_a=Sum('corsi_a'), xg_a=Sum('xg_a'), toi_on=Sum('toi_on'))
 
     data = filter_toi(data, toi)
 
@@ -225,7 +224,7 @@ def filter_by_game(data, toi, adjustment):
     :return: list (of dicts) who match criteria 
     """
     cols = ['player', 'game_id', 'team', 'season', 'date', 'opponent', 'home', 'shots_a', 'goals_a', 'fenwick_a',
-            'corsi_a', 'toi_on']
+            'xg_a', 'corsi_a', 'toi_on']
 
     if adjustment == 'Score Adjusted':
         # These columns are to hold non adjusted numbers for percentages when using score adjusted numbers
@@ -234,11 +233,11 @@ def filter_by_game(data, toi, adjustment):
         data = data.values('player', 'player_id', 'season', 'game_id', 'team', 'date', 'opponent', 'home') \
             .annotate(goals_a=Sum('goals_a'), shots_a_raw=Sum('shots_a'), fenwick_a_raw=Sum('fenwick_a'),
                       shots_a=Sum('shots_a_sa'), fenwick_a=Sum('fenwick_a_sa'), corsi_a=Sum('corsi_a_sa'),
-                      toi_on=Sum('toi_on'))
+                      xg_a=Sum('xg_a'), toi_on=Sum('toi_on'))
     else:
         data = data.values('player', 'player_id', 'season', 'game_id',  'team', 'date', 'opponent', 'home') \
             .annotate(goals_a=Sum('goals_a'), shots_a=Sum('shots_a'), fenwick_a=Sum('fenwick_a'),
-                      corsi_a=Sum('corsi_a'), toi_on=Sum('toi_on'))
+                      corsi_a=Sum('corsi_a'), xg_a=Sum('xg_a'), toi_on=Sum('toi_on'))
 
     data = filter_toi(data, toi)
 
@@ -257,21 +256,31 @@ def calculate_statistics(player, strength, adjustment):
     player['toi_on'] = format(player['toi_on'] / 60, '.2f')  # Convert to minutes
     player['strength'] = strength
 
-    # NEED to figure out a cleaner way than this Work Around
+    # TODO: Need to figure out a cleaner way than this Work Around
     # If it's in there we know it's score adjusted ... so we use those with pct at end
     if 'shots_a_raw' in list(player.keys()):
         player['Sv%'] = get_pct(player['shots_a_raw']-player['goals_a'], player['shots_a_raw'])
+        player['xFSv%'] = get_pct(player['fenwick_a_raw'] - player['xg_a'], player['fenwick_a_raw'])
         player['FSv%'] = get_pct(player['fenwick_a_raw'] - player['goals_a'], player['fenwick_a_raw'])
         player['Miss%'] = get_pct(player['fenwick_a_raw'] - player['shots_a_raw'], player['fenwick_a_raw'])
     else:
         player['Sv%'] = get_pct(player['shots_a'] - player['goals_a'], player['shots_a'])
+        player['xFSv%'] = get_pct(player['fenwick_a'] - player['xg_a'], player['fenwick_a'])
         player['FSv%'] = get_pct(player['fenwick_a'] - player['goals_a'], player['fenwick_a'])
         player['Miss%'] = get_pct(player['fenwick_a'] - player['shots_a'], player['fenwick_a'])
 
+    # Per 60's
     player['shots_a_60'] = get_per_60(player['toi_on'], player['shots_a'])
     player['goals_a_60'] = get_per_60(player['toi_on'], player['goals_a'])
     player['fenwick_a_60'] = get_per_60(player['toi_on'], player['fenwick_a'])
     player['corsi_a_60'] = get_per_60(player['toi_on'], player['corsi_a'])
+    player['xg_a_60'] = get_per_60(player['toi_on'], player['xg_a'])
+
+    # Adjusted Sv%
+    player['adj_sv'] = get_adj_sv(player['FSv%'], player['xFSv%'])
+
+    # Too many decimals
+    player['xg_a'] = round(player['xg_a'], 2)
 
     if adjustment == 'Score Adjusted':
         player['shots_a'] = format(player['shots_a'], '.2f')
@@ -279,6 +288,19 @@ def calculate_statistics(player, strength, adjustment):
         player['corsi_a'] = format(player['corsi_a'], '.2f')
 
     return player
+
+
+def get_adj_sv(sv, exp_sv):
+    """
+    Get Adjusted Sv% -> Actual - Expected
+    :param sv: Actual sv
+    :param exp_sv: Expected Sv%
+    :return: Adjusted Sv%
+    """
+    try:
+        return format(float(sv) - float(exp_sv), '.2f')
+    except ValueError:
+        return ''
 
 
 def get_pct(numerator, denominator):
