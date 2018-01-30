@@ -1,7 +1,6 @@
 # OffsideReview
 
-[OffsideReview](offsidereview.com) is a website for modern National Hockey League (NHL) 
-statistics from the 2016-2017 season onwards for all Regular Season and Playoff games.  
+[OffsideReview](http://offsidereview.com) is a website for modern National Hockey League (NHL) statistics from the 2016-2017 season onwards for all Regular Season and Playoff games.  
 
  
 ## Features
