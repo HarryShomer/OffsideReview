@@ -24,6 +24,7 @@ class Goalies(models.Model):
     corsi_a_sa = models.FloatField(null=True)
     if_empty = models.IntegerField(null=True)
     primary_key = models.CharField(max_length=100, primary_key=True, default='')
+    shooter_xg_a = models.FloatField(null=True)
 
     def __str__(self):
         return self.player

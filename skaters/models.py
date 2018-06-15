@@ -72,6 +72,11 @@ class Skaters(models.Model):
     face_def_off = models.IntegerField(null=True)
     if_empty = models.IntegerField(null=True)
     primary_key = models.CharField(max_length=100, primary_key=True, default='')
+    shooter_xg_a = models.FloatField(null=True)
+    shooter_xg_a_off = models.FloatField(null=True)
+    shooter_xg_f = models.FloatField(null=True)
+    shooter_xg_f_off = models.FloatField(null=True)
+    shooter_ixg = models.FloatField(null=True)
 
     def __str__(self):
         return self.player

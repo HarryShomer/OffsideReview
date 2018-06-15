@@ -1,7 +1,6 @@
 $.noConflict();
         jQuery(document).ready(function( $ ) {
 
-
             //Used to get player search list when page loads
             $.ajax({
                 url: "/goalies/GetPlayerList/",
@@ -35,12 +34,77 @@ $.noConflict();
             var customAdapter = $.fn.select2.amd.require('select2/data/customAdapter');
             var search_array = []
 
+            // Search bar for players
+            // Uses the select2 implementation
             var searchBar = $("#search").select2({
-                placeholder: "Search for a Goalie",
-                allowClear: true,
-                dataAdapter: customAdapter,
-                data: search_array,
-                maximumSelectionLength: 10
+                    placeholder: "Search for a Goalie",
+                    allowClear: true,
+                    dataAdapter: customAdapter,
+                    data: search_array,
+                    maximumSelectionLength: 10
+            });
+
+
+            /**
+                This function is called when the loadButton is clicked.
+                It first checks if the inputs are valid (if not it outputs an error message).
+                If it's good it sends an ajax request to get the requested query. The previous table is destroyed and
+                replaced by the new table with the data.
+            */
+            $("#loadButton").click(function(){
+
+                // Check that specified something for every query parameter
+                if(!verify_inputs()){
+                    var firstLine = "Invalid Input: You are missing at least one required input.";
+                    var secondLine = "The following buttons are required:";
+                    var thirdLine = "1. Strength \n2. Split By \n3. Venue \n4. Season Type \n5. Adjustments";
+                    alert(firstLine + "\n\n" + secondLine + "\n" + thirdLine)
+
+                    return;
+                }
+
+                // Ajax request to get data
+                $.ajax({
+                    url: '/goalies/Query/',
+                    type : "GET",
+                    data: {
+                        'strength': getStrength(),
+                        'split_by': get_split_by(),
+                        'team': getTeam(),
+                        'search': getSearch(),
+                        'venue': get_venue(),
+                        'season_type': get_season_type(),
+                        'date_filter_from': get_dateFilter1(),
+                        'date_filter_to': get_dateFilter2(),
+                        'adjustment': getAdjustments(),
+                        'toi': getToi(),
+                    },
+                    dataType: 'json',
+
+                    /*
+                        If it's good we destroy the previous table and create a new one with the new data
+                    */
+                    success: function (response) {
+                          table.destroy();
+                          $("#mydata").html('<thead class="bg-primary"></thead><tbody></tbody>');
+
+                          table = $('#mydata').DataTable({
+                                dom: 'Bfrtip',
+                                data: response.data,
+                                columns: return_table_columns(get_split_by()),
+                                info: false,
+                                "deferRender": true,
+                                "searching":   false,
+                                "pageLength": 50,
+                                buttons: [
+                                   { extend: 'csvHtml5', text: 'Export Data' }
+                                ],
+                                "scrollX": true,
+                                fixedColumns: true
+                          });
+                    }
+
+                });
             });
 
 
@@ -73,7 +137,11 @@ $.noConflict();
                         { "title": "Miss%" , data: 'Miss%'}
             ]
 
-            //Generic table with no data when request page...need to query to get data
+
+            /*
+                Create a Generic table with no data when request page...need to query to get data.
+                This is just to start off...
+            */
             table = $('#mydata').DataTable({
                 dom: 'Bfrtip',
                 data:[],
@@ -90,61 +158,13 @@ $.noConflict();
             } );
 
 
+/**********************************************************************************************************************
+**********************************************************************************************************************
+**********************************************************************************************************************/
 
-            //Get query when click load button
-            $("#loadButton").click(function(){
-
-                if(!verify_inputs()){
-                    var firstLine = "Invalid Input: You are missing at least one required input.";
-                    var secondLine = "The following buttons are required:";
-                    var thirdLine = "1. Strength \n2. Split By \n3. Venue \n4. Season Type \n5. Adjustments";
-                    alert(firstLine + "\n\n" + secondLine + "\n" + thirdLine)
-
-                    return;
-                }
-
-                $.ajax({
-                    url: '/goalies/Query/',
-                    type : "GET",
-                    data: {
-                        'strength': getStrength(),
-                        'split_by': get_split_by(),
-                        'team': getTeam(),
-                        'search': getSearch(),
-                        'venue': get_venue(),
-                        'season_type': get_season_type(),
-                        'date_filter_from': get_dateFilter1(),
-                        'date_filter_to': get_dateFilter2(),
-                        'adjustment': getAdjustments(),
-                        'toi': getToi(),
-                    },
-                    dataType: 'json',
-
-                    success: function (response) {
-                          //Destroy and recreate table
-                          table.destroy();
-                          $("#mydata").html('<thead class="bg-primary"></thead><tbody></tbody>');
-
-                          table = $('#mydata').DataTable({
-                                dom: 'Bfrtip',
-                                data: response.data,
-                                columns: return_table_columns(get_split_by()),
-                                info: false,
-                                "deferRender": true,
-                                "searching":   false,
-                                "pageLength": 50,
-                                buttons: [
-                                   { extend: 'csvHtml5', text: 'Export Data' }
-                                ],
-                                "scrollX": true,
-                                fixedColumns: true
-                          });
-                    }
-
-                });
-            });
-
-
+            /*
+              Get the specific columns for each type of split_by
+            */
             function return_table_columns(table_type){
                 var tmp_table = []
 
@@ -178,7 +198,7 @@ $.noConflict();
                 return tmp_table
             }
 
-
+            // Check that a choice was submitted for each param
             function verify_inputs(){
                 if(document.getElementById("Split_By").value == ''){
                    return false;

@@ -65,88 +65,100 @@
                               <td>Corsi (All shots) Against</td>
                           </tr>
                           <tr>
+                              <th>wshF</th>
+                              <td>Weighted Shots For = GF + .2*(CF-GF)</td>
+                          </tr>
+                          <tr>
+                              <th>wshA</th>
+                              <td>Weighted Shots Against = GA + .2*(CA-GA)</td>
+                          </tr>
+                          <tr>
                               <th>GF%</th>
-                              <td>Goal For Percentage -> GF/(GF+GA)*100</td>
+                              <td>Goal For Percentage = GF/(GF+GA)*100</td>
                           </tr>
                           <tr>
                               <th>xGF%</th>
-                              <td>Expected Goal For Percentage -> xGF/(xGF+xGA)*100</td>
+                              <td>Expected Goal For Percentage = xGF/(xGF+xGA)*100</td>
                           </tr>
                           <tr>
                               <th>FF%</th>
-                              <td>Fenwick For Percentage -> FF/(FF+FA)*100</td>
+                              <td>Fenwick For Percentage = FF/(FF+FA)*100</td>
                           </tr>
                           <tr>
                               <th>CF%</th>
-                              <td>Corsi For Percentage -> CF/(CF+CA)*100</td>
+                              <td>Corsi For Percentage = CF/(CF+CA)*100</td>
+                          </tr>
+                          <tr>
+                              <th>wSHF%</th>
+                              <td>Weighted Shots For Percentage = wshF/(wshF+wshA)*100</td>
                           </tr>
                           <tr>
                               <th>GF60</th>
-                              <td>Goals For Per 60 -> GF*60/TOI</td>
+                              <td>Goals For Per 60 = GF*60/TOI</td>
                           </tr>
                           <tr>
                               <th>xGF60</th>
-                              <td>Expected Goals For Per 60 -> xGF*60/TOI</td>
+                              <td>Expected Goals For Per 60 = xGF*60/TOI</td>
                           </tr>
                           <tr>
                               <th>SF60</th>
-                              <td>Shots For Per 60 -> SF*60/TOI</td>
+                              <td>Shots For Per 60 = SF*60/TOI</td>
                           </tr>
                           <tr>
                               <th>FF60</th>
-                              <td>Fenwick For Per 60 -> FF*60/TOI</td>
+                              <td>Fenwick For Per 60 = FF*60/TOI</td>
                           </tr>
                           <tr>
                               <th>CF60</th>
-                              <td>Corsi For Per 60 -> CF*60/TOI</td>
+                              <td>Corsi For Per 60 = CF*60/TOI</td>
                           </tr>
                           <tr>
                               <th>GA60</th>
-                              <td>Goals Against Per 60 -> GA*60/TOI</td>
+                              <td>Goals Against Per 60 = GA*60/TOI</td>
                           </tr>
                           <tr>
                               <th>xGA60</th>
-                              <td>Expected Goals Against Per 60 -> xGA*60/TOI</td>
+                              <td>Expected Goals Against Per 60 = xGA*60/TOI</td>
                           </tr>
                           <tr>
                               <th>SA60</th>
-                              <td>Shots Against Per 60 -> SA*60/TOI</td>
+                              <td>Shots Against Per 60 = SA*60/TOI</td>
                           </tr>
                           <tr>
                               <th>FA60</th>
-                              <td>Fenwick Against Per 60 -> FA*60/TOI</td>
+                              <td>Fenwick Against Per 60 = FA*60/TOI</td>
                           </tr>
                           <tr>
                               <th>CA60</th>
-                              <td>Corsi Against Per 60 -> CA*60/TOI</td>
+                              <td>Corsi Against Per 60 = CA*60/TOI</td>
                           </tr>
                           <tr>
                               <th>Sh%</th>
-                              <td>Shooting Percentage -> Goals/SOG*100</td>
+                              <td>Shooting Percentage = Goals/SOG*100</td>
                           </tr>
                           <tr>
                               <th>FSh%</th>
-                              <td>Fenwick Shooting Percentage -> Goals/Fenwick*100</td>
+                              <td>Fenwick Shooting Percentage = Goals/Fenwick*100</td>
                           </tr>
                           <tr>
                               <th>xFSh%</th>
-                              <td>Expected Fenwick Shooting Percentage -> xGoals/Fenwick*100</td>
+                              <td>Expected Fenwick Shooting Percentage = xGoals/Fenwick*100</td>
                           </tr>
                           <tr>
                               <th>Sv%</th>
-                              <td>Save Percentage -> Saves/SOG*100</td>
+                              <td>Save Percentage = Saves/SOG*100</td>
                             </tr>
                           <tr>
                               <th>FSv%</th>
-                              <td>Fenwick Save Percentage -> (SOG+Misses)/Fenwick*100</td>
+                              <td>Fenwick Save Percentage = (SOG+Misses)/Fenwick*100</td>
                           </tr>
                           <tr>
                               <th>xFSv%</th>
-                              <td>Expected Fenwick Save Percentage ->  (Fenwick-xGA)/Fenwick*100</td>
+                              <td>Expected Fenwick Save Percentage = (Fenwick-xGA)/Fenwick*100</td>
                           </tr>
                           <tr>
                               <th>Miss%</th>
-                              <td>Percentage of Unblocked shots that miss net -> Misses/Fenwick*100</td>
+                              <td>Percentage of Unblocked shots that miss net = Misses/Fenwick*100</td>
                           </tr>
                           <tr>
                               <th>A1</th>
@@ -158,11 +170,11 @@
                           </tr>
                           <tr>
                               <th>P</th>
-                              <td>Points -> Goals + Assists </td>
+                              <td>Points = Goals + Assists </td>
                           </tr>
                           <tr>
                               <th>P1</th>
-                              <td>Primary Points -> Goals + Primary Assists </td>
+                              <td>Primary Points = Goals + Primary Assists </td>
                           </tr>
                           <tr>
                               <th>xGoals</th>
@@ -182,51 +194,51 @@
                           </tr>
                           <tr>
                               <th>iSh%</th>
-                              <td>Individual Shooting Percentage -> Goals/iSF*100</td>
+                              <td>Individual Shooting Percentage = Goals/iSF*100</td>
                           </tr>
                           <tr>
                               <th>ifSh%</th>
-                              <td>Individual Fenwick Shooting Percentage -> Goals/iFF*100</td>
+                              <td>Individual Fenwick Shooting Percentage = Goals/iFF*100</td>
                           </tr>
                           <tr>
                               <th>ixFSh%</th>
-                              <td>Individual Expected Fenwick Shooting Percentage -> xGoals/iFF*100</td>
+                              <td>Individual Expected Fenwick Shooting Percentage = xGoals/iFF*100</td>
                           </tr>
                           <tr>
                               <th>G60</th>
-                              <td>Goals Per 60 -> Goals*60/TOI</td>
+                              <td>Goals Per 60 = Goals*60/TOI</td>
                           </tr>
                           <tr>
                               <th>xG60</th>
-                              <td>xGoals Per 60 -> xGoals*60/TOI</td>
+                              <td>xGoals Per 60 = xGoals*60/TOI</td>
                           </tr>
                           <tr>
                               <th>A160</th>
-                              <td>Primary Assists Per 60 -> A1*60/TOI </td>
+                              <td>Primary Assists Per 60 = A1*60/TOI </td>
                           </tr>
                           <tr>
                               <th>A260</th>
-                              <td>Secondary Assists Per 60 -> A2*60/TOI </td>
+                              <td>Secondary Assists Per 60 = A2*60/TOI </td>
                           </tr>
                           <tr>
                               <th>P60</th>
-                              <td>Points Per 60 -> P*60/TOI </td>
+                              <td>Points Per 60 = P*60/TOI </td>
                           </tr>
                           <tr>
                               <th>P160</th>
-                              <td>Primary Points Per 60 -> P1*60/TOI </td>
+                              <td>Primary Points Per 60 = P1*60/TOI </td>
                           </tr>
                           <tr>
                               <th>iSF60</th>
-                              <td>Individual SOG for Per 60 ->  iSF*60/TOI</td>
+                              <td>Individual SOG for Per 60 = iSF*60/TOI</td>
                           </tr>
                           <tr>
                               <th>iFen60</th>
-                              <td>Individual Fenwick for Per 60 ->  iFF*60/TOI </td>
+                              <td>Individual Fenwick for Per 60 = iFF*60/TOI </td>
                           </tr>
                           <tr>
                               <th>iCorsi60</th>
-                              <td>Individual Corsi for Per 60 ->  iCorsi*60/TOI</td>
+                              <td>Individual Corsi for Per 60 = iCorsi*60/TOI</td>
                           </tr>
                           <tr>
                               <th>PEND</th>
@@ -246,87 +258,87 @@
                           </tr>
                           <tr>
                               <th>REL GF%</th>
-                              <td>Relative GF% -> GF%(on ice) - GF%(off ice)</td>
+                              <td>Relative GF% = GF%(on ice) - GF%(off ice)</td>
                           </tr>
                           <tr>
                               <th>REL xGF%</th>
-                              <td>Relative xGF% -> xGF%(on ice) - xGF%(off ice)</td>
+                              <td>Relative xGF% = xGF%(on ice) - xGF%(off ice)</td>
                           </tr>
                           <tr>
                               <th>REL FF%</th>
-                              <td>Relative FF% -> FF%(on ice) - FF%(off ice)</td>
+                              <td>Relative FF% = FF%(on ice) - FF%(off ice)</td>
                           </tr>
                           <tr>
                               <th>REL CF%</th>
-                              <td>Relative CF% -> CF%(on ice) - CF%(off ice)</td>
+                              <td>Relative CF% = CF%(on ice) - CF%(off ice)</td>
                           </tr>
                           <tr>
                               <th>REL GF60</th>
-                              <td>Relative GF60 -> GF60(on ice) - GF60(off ice)</td>
+                              <td>Relative GF60 = GF60(on ice) - GF60(off ice)</td>
                           </tr>
                           <tr>
                               <th>REL xGF60</th>
-                              <td>Relative xGF60 -> xGF60(on ice) - xGF60(off ice)</td>
+                              <td>Relative xGF60 = xGF60(on ice) - xGF60(off ice)</td>
                           </tr>
                           <tr>
                               <th>REL SF60</th>
-                              <td>Relative SF60 -> SF60(on ice) - SF60(off ice)</td>
+                              <td>Relative SF60 = SF60(on ice) - SF60(off ice)</td>
                           </tr>
                           <tr>
                               <th>REL FF60</th>
-                              <td>Relative FF60 -> FF60(on ice) - FF60(off ice)</td>
+                              <td>Relative FF60 = FF60(on ice) - FF60(off ice)</td>
                           </tr>
                           <tr>
                               <th>REL CF60</th>
-                              <td>Relative CF60 -> CF60(on ice) - CF60(off ice)</td>
+                              <td>Relative CF60 = CF60(on ice) - CF60(off ice)</td>
                           </tr>
                           <tr>
                               <th>REL GA60</th>
-                              <td>Relative GA60 -> GA60(on ice) - GA60(off ice)</td>
+                              <td>Relative GA60 = GA60(on ice) - GA60(off ice)</td>
                           </tr>
                           <tr>
                               <th>REL xGA60</th>
-                              <td>Relative xGA60 -> xGA60(on ice) - xGA60(off ice)</td>
+                              <td>Relative xGA60 = xGA60(on ice) - xGA60(off ice)</td>
                           </tr>
                           <tr>
                               <th>REL SA60</th>
-                              <td>Relative SA60 -> SA60(on ice) - SA60(off ice)</td>
+                              <td>Relative SA60 = SA60(on ice) - SA60(off ice)</td>
                           </tr>
                           <tr>
                               <th>REL FA60</th>
-                              <td>Relative FA60 -> FA60(on ice) - FA60(off ice)</td>
+                              <td>Relative FA60 = FA60(on ice) - FA60(off ice)</td>
                           </tr>
                           <tr>
                               <th>REL CA60</th>
-                              <td>Relative CF60 -> CF60(on ice) - CF60(off ice)</td>
+                              <td>Relative CF60 = CF60(on ice) - CF60(off ice)</td>
                           </tr>
                           <tr>
                               <th>Rel Sh%</th>
-                              <td>Relative Sh% -> Sh%(on ice) - Sh%(off ice)</td>
+                              <td>Relative Sh% = Sh%(on ice) - Sh%(off ice)</td>
                           </tr>
                           <tr>
                               <th>Rel Sv%</th>
-                              <td>Relative Sv% -> Sv%(on ice) - Sv%(off ice)</td>
+                              <td>Relative Sv% = Sv%(on ice) - Sv%(off ice)</td>
                           </tr>
                           <tr>
                               <th>Rel FSh%</th>
-                              <td>Relative FSh% -> FSh%(on ice) - FSh%(off ice)</td>
+                              <td>Relative FSh% = FSh%(on ice) - FSh%(off ice)</td>
                           </tr>
                           <tr>
                               <th>Rel xFSh%</th>
-                              <td>Relative xFSh% -> xFSh%(on ice) - xFSh%(off ice)</td>
+                              <td>Relative xFSh% = xFSh%(on ice) - xFSh%(off ice)</td>
                           </tr>
                           <tr>
                               <th>Rel FSv%</th>
-                              <td>Relative FSv% -> FSv%(on ice) - FSv%(off ice)</td>
+                              <td>Relative FSv% = FSv%(on ice) - FSv%(off ice)</td>
                           </tr>
                           <tr>
                               <th>Rel xFSv%</th>
-                              <td>Relative xFSv% -> xFSv%(on ice) - xFSv%(off ice)</td>
+                              <td>Relative xFSv% = xFSv%(on ice) - xFSv%(off ice)</td>
                           </tr>
                           <tr>
                               <th>Rel Miss%</th>
-                              <td>Relative Miss% -> Miss%(on ice) - Miss%(off ice)</td>
+                              <td>Relative Miss% = Miss%(on ice) - Miss%(off ice)</td>
                           </tr>
                           <tr>
                               <th>Neu. Faceoffs</th>
@@ -342,27 +354,27 @@
                           </tr>
                           <tr>
                               <th>Off. Zone%</th>
-                              <td>Percentage of Face-offs in Offensive Zone -> Neu/(Off+Def+Neu)</td>
+                              <td>Percentage of Face-offs in Offensive Zone = Neu/(Off+Def+Neu)</td>
                           </tr>
                           <tr>
                               <th>Neu. Zone%</th>
-                              <td>Percentage of Face-offs in Neutral Zone -> Neu/(Off+Def+Neu) </td>
+                              <td>Percentage of Face-offs in Neutral Zone = Neu/(Off+Def+Neu) </td>
                           </tr>
                           <tr>
                               <th>Def. Zone%</th>
-                              <td>Percentage of Face-offs in Defensive Zone -> Neu/(Off+Def+Neu)</td>
+                              <td>Percentage of Face-offs in Defensive Zone = Neu/(Off+Def+Neu)</td>
                           </tr>
                           <tr>
                               <th>REL Neu. Zone%</th>
-                              <td>Relative Neutral Zone Face-off Percentage -> Neu.Zone%(on ice) - Neu.Zone%(off ice)</td>
+                              <td>Relative Neutral Zone Face-off Percentage = Neu.Zone%(on ice) - Neu.Zone%(off ice)</td>
                           </tr>
                           <tr>
                               <th>REL Off. Zone%</th>
-                              <td>Relative Offensive Zone Face-off Percentage -> Off.Zone%(on ice) - Off.Zone%(off ice)</td>
+                              <td>Relative Offensive Zone Face-off Percentage = Off.Zone%(on ice) - Off.Zone%(off ice)</td>
                           </tr>
                           <tr>
                               <th>REL Def. Zone%</th>
-                              <td>Relative Defensive Zone Face-off Percentage -> Def.Zone%(on ice) - Def.Zone%(off ice)</td>
+                              <td>Relative Defensive Zone Face-off Percentage = Def.Zone%(on ice) - Def.Zone%(off ice)</td>
                           </tr>
 
 

@@ -15,34 +15,7 @@ $.noConflict();
             });
 
 
-            // Making it so that the search bar options can be updated dynamically
-            // This is only done once with an ajax call when the page first loads
-            $.fn.select2.amd.define('select2/data/customAdapter',
-                ['select2/data/array', 'select2/utils'],
-                function (ArrayAdapter, Utils) {
-                    function CustomDataAdapter ($element, options) {
-                        CustomDataAdapter.__super__.constructor.call(this, $element, options);
-                    }
-                    Utils.Extend(CustomDataAdapter, ArrayAdapter);
-                    CustomDataAdapter.prototype.updateOptions = function (data) {
-                        this.$element.find('option').remove(); // remove all options
-                        this.addOptions(this.convertToOptions(data));
-                    }
-                    return CustomDataAdapter;
-                }
-            );
-            var customAdapter = $.fn.select2.amd.require('select2/data/customAdapter');
-
-            var search_array = []
-            var searchBar = $("#search").select2({
-                placeholder: "Search for a Player",
-                allowClear: true,
-                dataAdapter: customAdapter,
-                data: search_array,
-                maximumSelectionLength: 10
-            });
-
-
+            // All possible columns for on_ice view
             table_columns_on_ice = [
                 { "title": "Player", data: 'player' },
                 { "title": "Position", data: 'position' },
@@ -70,6 +43,7 @@ $.noConflict();
                 { "title": "xGF%" , data: 'xGF%'},
                 { "title": "CF%" , data: 'CF%'},
                 { "title": "FF%" , data: 'FF%'},
+                { "title": "wSHF%" , data: 'wshF%'},
                 { "title": "GF60" , data: 'goals_f_60'},
                 { "title": "GA60" , data: 'goals_a_60'},
                 { "title": "xGF60" , data: 'xg_f_60'},
@@ -80,6 +54,8 @@ $.noConflict();
                 { "title": "FA60" , data: 'fenwick_a_60'},
                 { "title": "CF60" , data: 'corsi_f_60'},
                 { "title": "CA60" , data: 'corsi_a_60'},
+                { "title": "wSHF60" , data: 'wsh_f_60'},
+                { "title": "wSHA60" , data: 'wsh_a_60'},
                 { "title": "Sh%" , data: 'Sh%'},
                 { "title": "FSh%" , data: 'fSh%'},
                 { "title": "xFSh%" , data: 'xFSh%'},
@@ -89,7 +65,7 @@ $.noConflict();
                 { "title": "Miss%" , data: 'Miss%'},
             ]
 
-
+            // All possible columns for ind view
             table_columns_ind = [
                 { "title": "Player", data: 'player' },
                 { "title": "Position", data: 'position' },
@@ -138,7 +114,7 @@ $.noConflict();
                 { "title": "Faceoff%" , data: 'face%'},
             ]
 
-
+            // All possible columns for rel view
             table_columns_rel = [
                 { "title": "Player", data: 'player' },
                 { "title": "Position", data: 'position' },
@@ -156,6 +132,7 @@ $.noConflict();
                 { "title": "Rel xGF%" , data: 'xGF%_rel'},
                 { "title": "Rel CF%" , data: 'CF%_rel'},
                 { "title": "Rel FF%" , data: 'FF%_rel'},
+                { "title": "Rel wSHF%" , data: 'wshF%_rel'},
                 { "title": "Rel GF60" , data: 'goals_f_60_rel'},
                 { "title": "Rel GA60" , data: 'goals_a_60_rel'},
                 { "title": "Rel xGF60" , data: 'xg_f_60_rel'},
@@ -166,6 +143,8 @@ $.noConflict();
                 { "title": "Rel FA60" , data: 'fenwick_a_60_rel'},
                 { "title": "Rel CF60" , data: 'corsi_f_60_rel'},
                 { "title": "Rel CA60" , data: 'corsi_a_60_rel'},
+                { "title": "Rel wSHF60" , data: 'wsh_f_60_rel'},
+                { "title": "Rel wSHA60" , data: 'wsh_a_60_rel'},
                 { "title": "Rel Sh%" , data: 'Sh%_rel'},
                 { "title": "Rel Fsh%" , data: 'fSh%_rel'},
                 { "title": "Rel xFsh%" , data: 'xfSh%_rel'},
@@ -175,6 +154,7 @@ $.noConflict();
                 { "title": "Rel Miss%" , data: 'Miss%_rel'},
             ]
 
+            // All possible columns for zone view
             table_columns_zone = [
                 { "title": "Player", data: 'player' },
                 { "title": "Position", data: 'position' },
@@ -200,27 +180,15 @@ $.noConflict();
             ]
 
 
-            //Generic table with no data when request page...need to query to get data
-            table = $('#mydata').DataTable({
-                dom: 'Bfrtip',
-                data:[],
-                columns: table_columns_on_ice,
-                info: false,
-                "deferRender": true,
-                "searching":   false,
-                "pageLength": 50,
-                buttons: [
-                   { extend: 'csvHtml5', text: 'Export Data' }
-                ],
-                "scrollX": true,
-                fixedColumns: true
-            } );
-
-
-
-            //Get query when click load button
+            /**
+                This function is called when the loadButton is clicked.
+                It first checks if the inputs are valid (if not it outputs an error message).
+                If it's good it sends an ajax request to get the requested query. The previous table is destroyed and
+                replaced by the new table with the data.
+            */
             $("#loadButton").click(function(){
 
+                // Check that specified something for every query parameter
                 if(!verify_inputs()){
                     var firstLine = "Invalid Input: You are missing at least one required input.";
                     var secondLine = "The following buttons are required:";
@@ -230,6 +198,7 @@ $.noConflict();
                     return;
                 }
 
+                // Ajax request to get data
                 $.ajax({
                     url: '/skaters/Query/',
                     type : "GET",
@@ -249,8 +218,10 @@ $.noConflict();
                     },
                     dataType: 'json',
 
+                    /*
+                        If it's good we destroy the previous table and create a new one with the new data
+                    */
                     success: function (response) {
-                          //Destroy and recreate table
                           table.destroy();
                           $("#mydata").html('<thead class="bg-primary"></thead><tbody></tbody>');
 
@@ -274,7 +245,64 @@ $.noConflict();
             });
 
 
+            /*
+                Create a Generic table with no data when request page...need to query to get data.
+                This is just to start off...
+            */
+            table = $('#mydata').DataTable({
+                dom: 'Bfrtip',
+                data:[],
+                columns: table_columns_on_ice,
+                info: false,
+                "deferRender": true,
+                "searching":   false,
+                "pageLength": 50,
+                buttons: [
+                   { extend: 'csvHtml5', text: 'Export Data' }
+                ],
+                "scrollX": true,
+                fixedColumns: true
+            } );
 
+
+            // Making it so that the search bar options can be updated dynamically
+            // This is only done once with an ajax call when the page first loads
+            $.fn.select2.amd.define('select2/data/customAdapter',
+                ['select2/data/array', 'select2/utils'],
+                function (ArrayAdapter, Utils) {
+                    function CustomDataAdapter ($element, options) {
+                        CustomDataAdapter.__super__.constructor.call(this, $element, options);
+                    }
+                    Utils.Extend(CustomDataAdapter, ArrayAdapter);
+                    CustomDataAdapter.prototype.updateOptions = function (data) {
+                        this.$element.find('option').remove(); // remove all options
+                        this.addOptions(this.convertToOptions(data));
+                    }
+                    return CustomDataAdapter;
+                }
+            );
+            var customAdapter = $.fn.select2.amd.require('select2/data/customAdapter');
+
+            // Search bar for players
+            // Uses the select2 implementation
+            var search_array = []
+            var searchBar = $("#search").select2({
+                placeholder: "Search for a Player",
+                allowClear: true,
+                dataAdapter: customAdapter,
+                data: search_array,
+                maximumSelectionLength: 10
+            });
+
+
+/**********************************************************************************************************************
+**********************************************************************************************************************
+**********************************************************************************************************************/
+
+            /*
+              Get the specific columns for each type of split_by. We first need to check the stats_view to see what
+              array of columns we are drawing from.
+            */
             function return_table_columns(season_type){
                 //Get view type
                 view_type = get_stats_view()
@@ -321,7 +349,7 @@ $.noConflict();
                 return tmp_table
             }
 
-
+            // Check that a choice was submitted for each param
             function verify_inputs(){
                 if(document.getElementById("Split_By").value == ''){
                    return false;
