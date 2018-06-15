@@ -29,7 +29,7 @@ SECRET_KEY = secret_key
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['offsidereview.com', '198.211.104.179', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = hosts
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
