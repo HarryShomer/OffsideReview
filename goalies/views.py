@@ -25,7 +25,7 @@ def get_search_list(request):
     players.sort()
     players.insert(0, '')
 
-    return JsonResponse({'search_list': players})
+    return JsonResponse(players, safe=False)
 
 
 def query_data(request):
@@ -48,7 +48,7 @@ def query_data(request):
     toi = request.GET.get('toi')
 
     query = Goalies.objects.filter(date__range=[date_filter_from, date_filter_to])
-    query = filter_player(query, player_search)
+    query = filter_players(query, player_search)
     query = filter_team(query, team)
     query = filter_strength(query, strength)
     query = filter_season_type(query, season_type)

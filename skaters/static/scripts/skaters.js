@@ -9,8 +9,7 @@ $.noConflict();
                 dataType: 'json',
 
                 success: function(response){
-                   search_array = response['search_list'];
-                   searchBar.data('select2').dataAdapter.updateOptions(search_array);
+                   searchBar.data('select2').dataAdapter.updateOptions(response);
                 }
             });
 
@@ -206,7 +205,7 @@ $.noConflict();
                         'strength': getStrength(),
                         'split_by': get_split_by(),
                         'team': getTeam(),
-                        'search': getSearch(),
+                        'search': JSON.stringify(getSearch()),
                         'venue': get_venue(),
                         'season_type': get_season_type(),
                         'date_filter_from': get_dateFilter1(),
@@ -283,15 +282,16 @@ $.noConflict();
             );
             var customAdapter = $.fn.select2.amd.require('select2/data/customAdapter');
 
+
             // Search bar for players
             // Uses the select2 implementation
             var search_array = []
             var searchBar = $("#search").select2({
                 placeholder: "Search for a Player",
-                allowClear: true,
                 dataAdapter: customAdapter,
                 data: search_array,
-                maximumSelectionLength: 10
+                multiple: true,     // Allow multiple selections
+                maximumSelectionSize: 3
             });
 
 
@@ -373,9 +373,9 @@ $.noConflict();
                 return true
             }
 
-
+            // Returns an array of the players selected
             function getSearch(){
-                return document.getElementById("search").value;
+                return $("#search").val();
             }
 
             function getStrength() {

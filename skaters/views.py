@@ -27,9 +27,8 @@ def get_search_list(request):
     players = list(set(players))
     players.sort()
     players.insert(0, '')
-    response = {'search_list': players}
 
-    return JsonResponse(response)
+    return JsonResponse(players, safe=False)
 
 
 def query_data(request):
@@ -44,7 +43,7 @@ def query_data(request):
 
     query = filter_view(request_data['stats_view'])
     query = query.filter(date__range=[request_data['date_filter_from'], request_data['date_filter_to']])
-    query = filter_player(query, request_data['search'])
+    query = filter_players(query, request_data['search'])
     query = filter_team(query, request_data['team'])
     query = filter_strength(query, request_data['strength'])
     query = filter_season_type(query, request_data['season_type'])
@@ -515,12 +514,20 @@ def calculate_rel_stats(player, strength):
         player['Miss%_rel'] = get_rel(get_pct(player['fenwick_a'] - player['shots_a'], player['fenwick_a']),
                                       miss_pct_off)
 
+
+    # Round a few
+    player['xg_f_off'] = round(player['xg_f_off'], 2)
+    player['corsi_f_off'] = round(player['corsi_f_off'], 2)
+    player['xg_a_off'] = round(player['xg_a_off'], 2)
+    player['corsi_a_off'] = round(player['corsi_a_off'], 2)
+
+
     """
     Delete a bunch of shit
     """
     del_cols = ['goals_f', 'shots_f', 'fenwick_f', 'wsh_f', 'xg_f', 'corsi_f', 'goals_a', 'shots_a', 'fenwick_a', 'wsh_a',
-                'xg_a', 'corsi_a', 'goals_f_off', 'shots_f_off', 'fenwick_f_off', 'wsh_f_off', 'xg_f_off', 'corsi_f_off',
-                'goals_a_off', 'shots_a_off', 'fenwick_a_off', 'wsh_a_off', 'xg_a_off', 'corsi_a_off']
+                'xg_a', 'corsi_a', 'goals_f_off', 'shots_f_off', 'fenwick_f_off', 'wsh_f_off', 'goals_a_off',
+                'shots_a_off', 'fenwick_a_off', 'wsh_a_off']
     for col in del_cols:
         del player[col]
 

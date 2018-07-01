@@ -2,6 +2,7 @@
 This file contains all the helpers functions used for querying data that are used by more than one view. 
 """
 from django.db.models import F
+import ast
 
 
 def filter_strength(data, strength):
@@ -24,17 +25,23 @@ def filter_strength(data, strength):
         return data.exclude(strength='0x0')
 
 
-def filter_player(data, player):
+def filter_players(data, players):
     """
-    Filter by player searched
+    Filter by players searched
     
     :param data: data we have at that point
-    :param player: player...
+    :param players: players specified
     
     :return: query
     """
-    if player != '':
-        return data.filter(player=player)
+    # Convert string representation of list to an actual list
+    try:
+        players = ast.literal_eval(players)
+    except (SyntaxError, ValueError) as e:
+        players = []
+
+    if players:
+        return data.filter(player__in=players)
     else:
         return data
 
