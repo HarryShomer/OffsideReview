@@ -3,24 +3,39 @@
 
 {% block body %}
     {% load static from staticfiles %}
+    <!--
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js" ></script>
+    -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js" ></script>
+
+    <!-- Not Bootstrap 4 - that newer version doesn't work here -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.html5.min.js"></script>
+
+    <!--
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedcolumns/3.2.3/css/fixedColumns.bootstrap.min.css"/>
     <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/3.2.3/js/dataTables.fixedColumns.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedcolumns/3.2.5/css/fixedColumns.bootstrap4.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/3.2.5/js/dataTables.fixedColumns.min.js"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="{% static 'goalies/goalies.css' %}" />
 
 
-    <div class="container-fluid" style="margin-left: 25px;">
+    <h2 style="margin-left: 15px; margin-top: 20px"> Goalie Stats</h2>
+
+    <div class="container-fluid">
 
         <!-- FIRST ROW -->
-        <div class="row" style="padding-top: 1cm; padding-bottom: 1cm; text-align: center;">
+        <div class="row" style="padding-top: .4cm; padding-bottom: .5cm; text-align: center;">
 
             <!-- Strength Button -->
             <div class="col-md-2" >
@@ -29,6 +44,9 @@
                  <select class="form-control" id="Strength">
                     <option hidden></option>
                     <option value="All Situations">All Situations</option>
+                    <option value="Even">Even</option>
+                    <option value="PP">PP</option>
+                    <option value="PK">PK</option>
                     <option value="5x5">5v5</option>
                     <option value="5x4">5v4</option>
                     <option value="4x5">4v5</option>
@@ -102,13 +120,13 @@
         <!-- SECOND ROW -->
         <div class="row" style="padding-bottom: 1cm; text-align: center;">
 
-                <!-- Custom Date filter button-->
+            <!-- Custom Date filter button-->
             <div class="col-md-2" >
 
                 <label for="date_filter_1" >From</label>
-                <input class="form-control" id="date_filter_1" type="date" value=2017-10-01>
+                <input class="form-control" id="date_filter_1" value="2017-10-01">
                 <label for="date_filter_2" >To</label>
-                <input class="form-control" id="date_filter_2" type="date" value=2018-07-01>
+                <input class="form-control" id="date_filter_2" value="2018-07-01">
 
             </div>
 
@@ -172,7 +190,7 @@
             </div>
 
             <!-- Load Button-->
-            <div class = "col-md-1" style="left:40px; top:20px;">
+            <div class = "col-md-1" style="left:30px; top:31.5px;">
                 <button type="button" id="loadButton" class="btn btn-primary btn-md btn-block">Load</button>
             </div>
 
@@ -181,10 +199,12 @@
     </div>
 
     <!-- Create the table -->
-    <div class="container-fluid" id="stats_table" style="margin-left: 25px; margin-right: 25px;">
-        <table class="table table-striped" cellspacing="0" width="100%" id="mydata">
-            <thead class="bg-primary"></thead>
+    <div class="container-fluid" id="stats_table">
+
+        <table class="table" cellspacing="0" id="mydata">
+            <thead></thead>
         </table>
+
     </div>
 
     {% block scripts %}

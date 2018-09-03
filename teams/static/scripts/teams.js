@@ -1,6 +1,10 @@
 $.noConflict();
         jQuery(document).ready(function( $ ) {
 
+            // Set Dates
+            $( "#date_filter_1" ).datepicker({dateFormat: "yy-mm-dd"});
+            $( "#date_filter_2" ).datepicker({dateFormat: "yy-mm-dd"});
+
             /**
                 This function is called when the loadButton is clicked.
                 It first checks if the inputs are valid (if not it outputs an error message).
@@ -109,8 +113,8 @@ $.noConflict();
                         { "title": "FSv%" , data: 'FSv%'},
                         { "title": "xFSv%" , data: 'xFSv%'},
                         { "title": "Miss%" , data: 'Miss%'},
-                        { "title": "PENT" , data: 'pend'},
-                        { "title": "PEND" , data: 'pent'},
+                        { "title": "PENT" , data: 'pent'},
+                        { "title": "PEND" , data: 'pend'},
                         { "title": "HF" , data: 'hits_f'},
                         { "title": "HA" , data: 'hits_a'},
                         { "title": "Takes" , data: 'takes'},
@@ -236,7 +240,6 @@ $.noConflict();
             }
 
             function get_dateFilter1(){
-
                 return document.getElementById("date_filter_1").value;
             }
 

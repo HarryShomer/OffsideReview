@@ -1,17 +1,36 @@
 {% extends 'base.html' %}
 
 {% block body %}
-    <h1 style="padding: 10px 70px 10px 70px;">About</h1>
+    <h1 style="padding: 10px 50px 10px 50px;">About</h1>
 
-    <p style="padding: 10px 70px 10px 70px; font-size:135%;">
+    <!--
+    <p style="padding: 10px 50px 0px 50px; font-size:110%;">
         OffsideReview is a resource for National Hockey League (NHL) statistics. As of now, the data is from the
-        2016-2017 season until the present for all Regular Season and Playoff games (Preseason is not included). There are
-        currently three views: Skaters, Team, and Goalies. In each view you query data by a variety of different
-        parameters. The option also exists to download your query in the form of a CSV file. The site is updated
-        every morning at 10 a.m. EST.
+        2016-2017 season until the present for all Regular Season and Playoff games (Preseason is not included). There
+        currently exists the option to query data for Skaters, Teams, and Goalies using a variety of different parameters.
+        The option also exists to download your query in the form of a CSV file. Also, every day for each game the probabilities
+        both teams of winning will be computed. The code for the model can <a href="#">here</a>. Lastly, there
+        also exists end of season projections for every team. These include: Projected points total, probability of
+        reaching every round of the playoffs, and the probability of winning the Stanley Cup. The code for these projections
+        can be found <a href="#">here</a>.
     </p>
 
-    <p style="padding: 10px 70px 10px 70px; font-size:135%;">
+    <p style="padding: 10px 50px 0px 50px; font-size:110%">
+        The site is updated every day at different times. The player and teams stats are updated every morning at 10 a.m.
+        EST. The game predictions will appear at earliest at 10:30 a.m EST and may take longer. They will also update as
+        the day goes on to reflect the changes in the game rosters posted by both teams. Lastly, the season projections
+        will update early every morning and should be finished at 6:00 a.m EST.
+    </p>
+    -->
+    <p style="padding: 10px 50px 0px 50px; font-size:110%;">
+        OffsideReview is a resource for National Hockey League (NHL) statistics. As of now, the data is from the 2016-2017
+        season until the present for all Regular Season and Playoff games (Preseason is not included). There are currently
+        three views: Skaters, Team, and Goalies. In each view you query data by a variety of different parameters. The
+        option also exists to download your query in the form of a CSV file. The site is updated every morning at
+        10 a.m. EST.
+    </p>
+
+    <p style="padding: 10px 50px 0px 50px; font-size:110%;">
         For those interested in the construction of the site, I use the
         <a href="https://www.djangoproject.com/">Django Web Framework</a> (written in
         <a href="https://www.python.org">Python</a>) for the site. The frontend is comprised of
@@ -22,7 +41,7 @@
     </p>
 
 
-    <p style="padding: 10px 70px 10px 70px; font-size:135%;">
+    <p style="padding: 0px 50px 10px 50px; font-size:110%;">
         If you wish to contact me to report a bug or suggest a new feature you can get in touch with me either on twitter
         at <a href="https://twitter.com/offsides_review">@offsides_review</a> or you can email me at OffsideReviewHockey@gmail.com.
     </p>

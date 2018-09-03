@@ -1,0 +1,39 @@
+<!-- Include template -->
+{% extends 'base.html' %}
+
+{% block body %}
+    {% load static from staticfiles %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js" ></script>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'season_projs/season_projs.css' %}" />
+
+    <!-- Header -->
+    <h2 style="margin-left: 18px; margin-top: 20px"> Season Projections</h2>
+
+    <!-- Disclaimer -->
+    <p style="margin-left: 18px;">
+        NOTES: 1. The projections here do not include the results of last night's games. <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        2. 'Points Std' is the standard deviation in projected points observed in the simulations.  <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        3. The probabilities are of getting to that stage of the playoffs. So, for example, 'Round 1%' is the probability
+        of making the first round.
+    </p>
+
+    <!-- Create the table -->
+    <div class="container-fluid" id="stats_table">
+
+        <table class="table" cellspacing="0" width="100%" id="mydata">
+            <thead></thead>
+        </table>
+
+    </div>
+
+    {% block scripts %}
+        <script src="{% static 'scripts/season_projs.js' %}"></script>
+    {% endblock %}
+
+
+{% endblock %}

@@ -1,6 +1,11 @@
 $.noConflict();
         jQuery(document).ready(function( $ ) {
 
+            // Set Dates
+            $( "#date_filter_1" ).datepicker({dateFormat: "yy-mm-dd"});
+            $( "#date_filter_2" ).datepicker({dateFormat: "yy-mm-dd"});
+
+
             //Used to get player search list when page loads
             $.ajax({
                 url: "/skaters/GetPlayerList/",
@@ -16,7 +21,7 @@ $.noConflict();
 
             // All possible columns for on_ice view
             table_columns_on_ice = [
-                { "title": "Player", data: 'player' },
+                { "title": "Player", "width": "20%", data: 'player' },
                 { "title": "Position", data: 'position' },
                 { "title": "Handedness", data: 'handedness' },
                 { "title": "Season" , data: 'season'},
@@ -66,7 +71,7 @@ $.noConflict();
 
             // All possible columns for ind view
             table_columns_ind = [
-                { "title": "Player", data: 'player' },
+                { "title": "Player", "width": "20%", data: 'player' },
                 { "title": "Position", data: 'position' },
                 { "title": "Handedness", data: 'handedness'},
                 { "title": "Season" , data: 'season'},
@@ -115,7 +120,7 @@ $.noConflict();
 
             // All possible columns for rel view
             table_columns_rel = [
-                { "title": "Player", data: 'player' },
+                { "title": "Player", "width": "20%", data: 'player' },
                 { "title": "Position", data: 'position' },
                 { "title": "Handedness", data: 'handedness' },
                 { "title": "Season" , data: 'season'},
@@ -155,7 +160,7 @@ $.noConflict();
 
             // All possible columns for zone view
             table_columns_zone = [
-                { "title": "Player", data: 'player' },
+                { "title": "Player", "width": "20%", data: 'player' },
                 { "title": "Position", data: 'position' },
                 { "title": "Handedness", data: 'handedness' },
                 { "title": "Season" , data: 'season'},
@@ -409,7 +414,7 @@ $.noConflict();
 
             }
 
-            function get_dateFilter1(){
+             function get_dateFilter1(){
                 return document.getElementById("date_filter_1").value;
             }
 

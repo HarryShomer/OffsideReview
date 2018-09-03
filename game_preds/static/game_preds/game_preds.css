@@ -35,7 +35,5 @@ word-wrap:break-word;
 th:nth-child(n)
 {
    color: #fff;
-   background-color: #337ab7;
+   background-color: #337ab7; //Replace it with your desired color
 }
-
-

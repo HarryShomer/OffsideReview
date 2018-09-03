@@ -58,7 +58,7 @@ def query_data(request):
         skaters = [calculate_ice_stats(player, request_data['strength'], request_data['adjustment']) for player in skaters]
     elif request_data['stats_view'] == 'Relative':
         skaters = filter_by_rel(query, request_data)
-        skaters = [calculate_rel_stats(player, request_data['strength']) for player in skaters]
+        skaters = [calculate_rel_stats(player, request_data['strength'], request_data['stats_view']) for player in skaters]
     elif request_data['stats_view'] == 'Zone Starts':
         skaters = filter_by_zone(query, request_data)
         skaters = [calculate_zone_stats(player, request_data['strength']) for player in skaters]
@@ -412,12 +412,13 @@ def calculate_ice_stats(player, strength, adjustment):
     return player
 
 
-def calculate_rel_stats(player, strength):
+def calculate_rel_stats(player, strength, query_type):
     """
     Calculate statistics for rel view
     
     :param player: given row
     :param strength: on ice strength
+    :param query_type: If this is just a "Relative" or stemming from "All"
     
     :return json
     """
@@ -514,20 +515,22 @@ def calculate_rel_stats(player, strength):
         player['Miss%_rel'] = get_rel(get_pct(player['fenwick_a'] - player['shots_a'], player['fenwick_a']),
                                       miss_pct_off)
 
+    # Holds columns for "off" stats
+    off_cols = ['xg_f_off', 'corsi_f_off', 'xg_a_off', 'corsi_a_off', 'wsh_f_off', 'wsh_a_off', 'shots_f_off',
+                'shots_a_off', 'fenwick_f_off', 'fenwick_a_off']
 
-    # Round a few
-    player['xg_f_off'] = round(player['xg_f_off'], 2)
-    player['corsi_f_off'] = round(player['corsi_f_off'], 2)
-    player['xg_a_off'] = round(player['xg_a_off'], 2)
-    player['corsi_a_off'] = round(player['corsi_a_off'], 2)
-
-
-    """
-    Delete a bunch of shit
-    """
+    # Columns I want to delete...they don't need to be sent to anyone here
     del_cols = ['goals_f', 'shots_f', 'fenwick_f', 'wsh_f', 'xg_f', 'corsi_f', 'goals_a', 'shots_a', 'fenwick_a', 'wsh_a',
-                'xg_a', 'corsi_a', 'goals_f_off', 'shots_f_off', 'fenwick_f_off', 'wsh_f_off', 'goals_a_off',
-                'shots_a_off', 'fenwick_a_off', 'wsh_a_off']
+                'xg_a', 'corsi_a']
+
+    # If this originates from "All" we want to keep the off columns and round them
+    # If this originates from "Relative" we want to also get rid of the off columns
+    if query_type == "All":
+        for col in off_cols:
+            player[col] = round(player[col], 2)
+    else:
+        del_cols += off_cols
+
     for col in del_cols:
         del player[col]
 
@@ -584,12 +587,15 @@ def calculate_all_stats(query, request_data):
     # Get Stats for each type
     ind = [calculate_ind_stats(player, request_data['strength']) for player in filter_by_individual(query, request_data)]
     ice = [calculate_ice_stats(player, request_data['strength'], request_data['adjustment']) for player in filter_by_on_ice(query, request_data)]
-    rel = [calculate_rel_stats(player, request_data['strength']) for player in filter_by_rel(query, request_data)]
+    rel = [calculate_rel_stats(player, request_data['strength'], "All") for player in filter_by_rel(query, request_data)]
     zone = [calculate_zone_stats(player, request_data['strength']) for player in filter_by_zone(query, request_data)]
 
     # Merge dictionaries
     for i, o, r, z in zip(sorted(ind, key=sorting_keys), sorted(ice, key=sorting_keys), sorted(rel, key=sorting_keys), sorted(zone, key=sorting_keys)):
         i.update(o), i.update(r), i.update(z)
+
+        # TODO: Figure out why 'toi_off' is 60x higher than it should be
+        i['toi_off'] = round(i['toi_off']/60, 2)
 
     return ind
 

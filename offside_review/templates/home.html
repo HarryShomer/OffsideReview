@@ -2,49 +2,80 @@
 
 {% block body %}
     <div class="jumbotron">
-      <h1 align="center">OffsideReview</h1>
+
+      <h1 class="display-4" align="center"> <b>OffsideReview</b></h1>
 
       <p class="lead" align="center">
-          Resource for hockey statistics
+          Resource for Hockey Statistics
       </p>
 
     </div>
 
     <div class="container">
+
+        <!-- Row 1 - Skaters/Teams/Goalies -->
         <div class="row">
 
             <div class="col-md-4">
-                <h2>Skaters</h2>
+                <h3>Skaters</h3>
                 <p>Query stats by skater. Multiple views exists including: Individual stats, On-Ice stats,
                     Relative stats, and Zone starts.
                 </p>
                 <p>
-                    <a class="btn btn-default " href="{% url 'skaters:index' %}" role="button">View Skater Data</a>
+                    <a class="btn btn-outline-primary" href="{% url 'skaters:index' %}" role="button">View Skater Data</a>
                 </p>
             </div>
 
             <div class="col-md-4">
-                <h2>Teams</h2>
+                <h3>Teams</h3>
                 <p>
                     Query stats by team. Includes the ability to filter between a custom date range.
                    <br><br>
                 </p>
                 <p>
-                    <a class="btn btn-default " href="{% url 'teams:index' %}" role="button">View Team Data</a>
+                    <a class="btn btn-outline-primary" href="{% url 'teams:index' %}" role="button">View Team Data</a>
                 </p>
             </div>
 
             <div class="col-md-4">
-                <h2>Goalies</h2>
+                <h3>Goalies</h3>
                 <p>
                     Query stats by goalie. Includes the ability to filter by game.
                     <br><br>
                 </p>
                 <p>
-                    <a class="btn btn-default " href="{% url 'goalies:index' %}" role="button">View Goalie Data</a>
+                    <a class="btn btn-outline-primary" href="{% url 'goalies:index' %}" role="button">View Goalie Data</a>
                 </p>
             </div>
+
         </div>
+
+        <!--
+        <div class="row">
+            <div class="col-md-4">
+                <h3>Game Predictions</h3>
+                <p>
+                    Check out the predictions for today's games.
+                    <br><br>
+                </p>
+                <p>
+                    <a class="btn btn-outline-primary" href="{% url 'game_preds:index' %}" role="button">View Game Predictions</a>
+                </p>
+            </div>
+
+            <div class="col-md-4">
+                <h3>Season Projections</h3>
+                <p>
+                    Check out the projections for every team.
+                    <br><br>
+                </p>
+                <p>
+                    <a class="btn btn-outline-primary" href="{% url 'season_projs:index' %}" role="button">View Season Projections</a>
+                </p>
+            </div>
+
+        </div>
+        -->
 
         <hr>
     </div>

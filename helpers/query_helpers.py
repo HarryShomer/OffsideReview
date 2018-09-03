@@ -14,13 +14,22 @@ def filter_strength(data, strength):
     
     :return: query 
     """
-    # Don't do anything for All Situations
+    even = ['5x5', '4x4', '3x3']
+    pp = ['6x5', '6x4', '6x3', '5x4', '5x3', '4x3']
+    pk = ['5x6', '4x6', '3x6', '4x5', '3x5', '3x4']
+
+    # If it's has a 6 they obviously want empty net stuff otherwise don't bother
+    # Holds 1 is true, 0 if not
+    is_empty = 1 if '6' in strength else 0
+
+    if strength == "PP":
+        return data.filter(strength__in=pp).filter(if_empty=is_empty)
+    if strength == "PK":
+        return data.filter(strength__in=pk).filter(if_empty=is_empty)
+    if strength == "Even":
+        return data.filter(strength__in=even).filter(if_empty=is_empty)
     if strength != 'All Situations':
-        # If it's has a 6 they obviously want empty net stuff otherwise don't bother
-        if '6' in strength:
-            return data.filter(strength=strength).filter(if_empty=1)
-        else:
-            return data.filter(strength=strength).filter(if_empty=0)
+        return data.filter(strength=strength).filter(if_empty=is_empty)
     else:
         return data.exclude(strength='0x0')
 

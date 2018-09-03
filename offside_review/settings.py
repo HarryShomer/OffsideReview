@@ -27,7 +27,7 @@ from secret_settings import *
 SECRET_KEY = secret_key
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = hosts
 
@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'goalies.apps.GoaliesConfig',
     'skaters.apps.SkatersConfig',
     'teams.apps.TeamsConfig',
+    'game_preds.apps.GamePredsConfig',
+    'season_projs.apps.SeasonProjsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -57,8 +59,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'offside_review.urls'
-
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "offside_review/static/")]
 
 TEMPLATES = [
     {
@@ -129,6 +129,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "offside_review/static/"), "season_projs/static"]
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')

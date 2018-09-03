@@ -2,7 +2,6 @@ from django.db import models
 
 
 class Goalies(models.Model):
-
     player = models.CharField(max_length=30, default='')
     player_id = models.CharField(max_length=7, default='')
     game_id = models.IntegerField(null=True)

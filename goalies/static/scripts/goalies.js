@@ -1,6 +1,11 @@
 $.noConflict();
         jQuery(document).ready(function( $ ) {
 
+            // Set Dates
+            $( "#date_filter_1" ).datepicker({dateFormat: "yy-mm-dd"});
+            $( "#date_filter_2" ).datepicker({dateFormat: "yy-mm-dd"});
+
+
             //Used to get player search list when page loads
             $.ajax({
                 url: "/goalies/GetPlayerList/",
@@ -255,7 +260,7 @@ $.noConflict();
 
             }
 
-            function get_dateFilter1(){
+             function get_dateFilter1(){
                 return document.getElementById("date_filter_1").value;
             }
 

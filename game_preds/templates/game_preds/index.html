@@ -1,0 +1,104 @@
+<!-- Include template -->
+{% extends 'base.html' %}
+
+{% block body %}
+    {% load static from staticfiles %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js" ></script>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'game_preds/game_preds.css' %}" />
+
+
+    <!-- Header -->
+    <h2 style="margin-left: 17px; margin-top: 20px"> Game Predictions</h2>
+
+    <!-- Disclaimer -->
+    <p style="margin-left: 17px;">
+        NOTE: The probabilities for today's games will at the earliest appear at 10:30 and may take longer.
+    </p>
+
+    <div class="container-fluid">
+
+        <div class="row" style="padding-bottom: 1cm; text-align: center;">
+
+            <!-- Date From button-->
+            <div class="col-md-2" >
+                <label for="date_filter_1" >From</label>
+                <input class="form-control" id="date_filter_1">
+            </div>
+
+            <!-- Date To button-->
+            <div class="col-md-2" >
+                <label for="date_filter_2" >To</label>
+                <input class="form-control" id="date_filter_2">
+            </div>
+
+
+             <!-- Team Button -->
+            <div class="col-md-2">
+                <label for="TeamButton">Team</label>
+
+                 <select class="form-control" id="TeamButton">
+                    <option value="All">All</option>
+                    <option value="ANA">ANA</option>
+                    <option value="ARI">ARI</option>
+                    <option value="ATL">ATL</option>
+                    <option value="BOS">BOS</option>
+                    <option value="BUF">BUF</option>
+                    <option value="CAR">CAR</option>
+                    <option value="CBJ">CBJ</option>
+                    <option value="CGY">CGY</option>
+                    <option value="CHI">CHI</option>
+                    <option value="COL">COL</option>
+                    <option value="DAL">DAL</option>
+                    <option value="DET">DET</option>
+                    <option value="EDM">EDM</option>
+                    <option value="FLA">FLA</option>
+                    <option value="L.A">L.A</option>
+                    <option value="MIN">MIN</option>
+                    <option value="MTL">MTL</option>
+                    <option value="N.J">N.J</option>
+                    <option value="NSH">NSH</option>
+                    <option value="NYI">NYI</option>
+                    <option value="NYR">NYR</option>
+                    <option value="OTT">OTT</option>
+                    <option value="PHI">PHI</option>
+                    <option value="PHX">PHX</option>
+                    <option value="PIT">PIT</option>
+                    <option value="S.J">S.J</option>
+                    <option value="STL">STL</option>
+                    <option value="TOR">TOR</option>
+                    <option value="T.B">T.B</option>
+                    <option value="VAN">VAN</option>
+                    <option value="VGK">VGK</option>
+                    <option value="WPG">WPG</option>
+                    <option value="WSH">WSH</option>
+                 </select>
+            </div>
+
+            <!-- Load Button-->
+            <div class = "col-md-1" style="left:30px; top:30px;">
+                <button type="button" id="loadButton" class="btn btn-primary btn-md btn-block">Load</button>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <!-- Create the table -->
+    <div class="container-fluid" id="stats_table">
+
+        <table class="table" cellspacing="0" width="100%" id="mydata">
+            <thead></thead>
+        </table>
+
+    </div>
+
+    {% block scripts %}
+        <script src="{% static 'scripts/game_preds.js' %}"></script>
+    {% endblock %}
+
+
+{% endblock %}
